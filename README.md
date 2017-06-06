@@ -1,1 +1,1 @@
-# SudokuMania
+# Sudoklin
