@@ -7,14 +7,21 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
-//apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'org.junit.platform.gradle.plugin'
 
+junitPlatform {
+    filters {
+        engines {
+            include 'spek'
+        }
+    }
+}
 
 mainClassName = 'sudoklin.HelloKt'
 
@@ -22,22 +29,14 @@ defaultTasks 'run'
 
 repositories {
     mavenCentral()
-//    maven { url "http://dl.bintray.com/jetbrains/spek" }
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testCompile "junit:junit:4.11"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-//    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-//    testCompile "org.jetbrains.spek:spek-api:$kotlin_version"
-//    testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$kotlin_version"
-}
 
-//junitPlatform {
-//    filters {
-//        engines {
-//            include 'spek'
-//        }
-//    }
-//}
+    testCompile "junit:junit:4.11"
+//    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile "org.jetbrains.spek:spek-api:$kotlin_version"
+    testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$kotlin_version"
+}
