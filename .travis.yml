@@ -3,3 +3,14 @@ sudo: false
 
 jdk:
   - oraclejdk8
+
+notifications:
+  email:
+    recipients:
+    - witmic1@gmail.com
+    - stegschreck@gmail.com
+    on_success: change
+    on_failure: always
+
+after_success:
+- ./gradlew cobertura coveralls
