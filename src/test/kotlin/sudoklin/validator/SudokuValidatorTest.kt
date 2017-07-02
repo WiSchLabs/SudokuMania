@@ -7,10 +7,7 @@ import sudoklin.data.Sudoku
 import sudoklin.impex.SudokuFileImporter
 import kotlin.test.assertTrue
 
-/**
- * Created by sebastian on 26.06.17.
- */
-class SudokuFileImporterTest : Spek({
+class SudokuValidatorTest : Spek({
     describe("Given a correctly filled row") {
         val file_importer = SudokuFileImporter()
         val sudoku = file_importer.import("src/test/resources/filled_valid.sdk")
