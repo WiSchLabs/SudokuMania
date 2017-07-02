@@ -19,19 +19,11 @@ class SudokuFileImporterTest : Spek({
             val sudoku = file_importer.import("src/test/resources/example.sdk")
             assertTrue(sudoku is Sudoku)
         }
-    }
-
-    describe("An importer") {
-        val file_importer = SudokuFileImporter()
 
         it("should return a Sudoku object with a puzzle") {
             val sudoku = file_importer.import("src/test/resources/example.sdk")
             assertTrue(sudoku.puzzle is SudokuPuzzle)
         }
-    }
-
-    describe("An importer") {
-        val file_importer = SudokuFileImporter()
 
         it("should return a Sudoku object with a puzzle with first cell filled correctly") {
             val sudoku = file_importer.import("src/test/resources/example.sdk")

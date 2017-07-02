@@ -1,8 +1,5 @@
 package sudoklin.data
 
-/**
- * Created by sebastian on 13.06.17.
- */
 class Sudoku constructor(puzzle: SudokuPuzzle){
     val puzzle: SudokuPuzzle = puzzle
 }
@@ -12,5 +9,9 @@ class SudokuPuzzle constructor(matrix: List<List<String>>) {
 
     fun getCell(x: Int, y: Int): String {
         return matrix.get(x).get(y)
+    }
+
+    fun getRow(rowNumber: Int): List<String> {
+        return matrix[rowNumber]
     }
 }
