@@ -1,3 +1,3 @@
 # Sudoklin
 
-![Sudoklin.png](Sudoklin)
+![Sudoklin](Sudoklin.png)
