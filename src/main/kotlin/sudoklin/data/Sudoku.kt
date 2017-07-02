@@ -14,4 +14,13 @@ class SudokuPuzzle constructor(matrix: List<List<String>>) {
     fun getRow(rowNumber: Int): List<String> {
         return matrix[rowNumber]
     }
+
+    fun getColumn(columnNumber: Int): List<String> {
+
+        var column: MutableList<String> = mutableListOf<String>()
+        for (i in 0..8) {
+            column.add(matrix.get(i).get(columnNumber))
+        }
+        return column
+    }
 }
