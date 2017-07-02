@@ -26,6 +26,13 @@ class SudokuValidatorTest : Spek({
                 val validator = SudokuValidator()
                 assertTrue(validator.validateColumn(sudoku, 0))
             }
+
+            it("the validator should return that the upper left corner group is valid") {
+                val sudoku = file_importer.import("src/test/resources/filled_valid.sdk")
+
+                val validator = SudokuValidator()
+                assertTrue(validator.validateGroup(sudoku, 0))
+            }
         }
 
         on("an invalid sudoku") {
@@ -41,6 +48,13 @@ class SudokuValidatorTest : Spek({
 
                 val validator = SudokuValidator()
                 assertFalse(validator.validateColumn(sudoku, 8))
+            }
+
+            it("the validator should return that the upper right corner group is invalid") {
+                val sudoku = file_importer.import("src/test/resources/filled_invalid.sdk")
+
+                val validator = SudokuValidator()
+                assertFalse(validator.validateGroup(sudoku, 2))
             }
         }
     }

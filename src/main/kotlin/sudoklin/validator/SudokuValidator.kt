@@ -22,4 +22,14 @@ class SudokuValidator {
         }
         return valid
     }
+
+    fun  validateGroup(sudoku: Sudoku, groupIndex: Int): Boolean {
+        val column = sudoku.puzzle.getGroup(groupIndex)
+        var valid = true
+        for (i in 1..9) {
+            val filteredColumn = column.filter { it == i.toString() }
+            valid = valid && (filteredColumn.size <= 1)
+        }
+        return valid
+    }
 }
