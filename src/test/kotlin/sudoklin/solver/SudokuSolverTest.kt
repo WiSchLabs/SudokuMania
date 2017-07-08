@@ -41,6 +41,15 @@ class SudokuSolverTest : Spek({
 
         describe("unfilled") {
             describe("valid") {
+                it("should return the number 2 for the first cell") {
+                    val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
+
+                    val solver = SudokuSolver()
+                    val possibleNumbersInCell = solver.getPossibleNumbersInCell(sudoku, 0, 0)
+                    assertEquals(1, possibleNumbersInCell.size)
+                    assertEquals(2, possibleNumbersInCell[0])
+                }
+
                 it("should return the number 2 for the first row") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
 

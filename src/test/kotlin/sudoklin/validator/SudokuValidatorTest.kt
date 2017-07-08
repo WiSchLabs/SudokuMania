@@ -37,14 +37,14 @@ class SudokuValidatorTest : Spek({
             }
 
             describe("invalid") {
-                it("should return that the first row invalid") {
+                it("should return that the first row is invalid") {
                     val sudoku = file_importer.import("src/test/resources/filled_invalid.sdk")
 
                     val validator = SudokuValidator()
                     assertFalse(validator.validateRow(sudoku, 0))
                 }
 
-                it("should return that the last column invalid") {
+                it("should return that the last column is invalid") {
                     val sudoku = file_importer.import("src/test/resources/filled_invalid.sdk")
 
                     val validator = SudokuValidator()
