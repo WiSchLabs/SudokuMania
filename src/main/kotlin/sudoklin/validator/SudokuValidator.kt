@@ -13,7 +13,7 @@ class SudokuValidator {
         return valid
     }
 
-    fun  validateColumn(sudoku: Sudoku, columnNumber: Int): Boolean {
+    fun validateColumn(sudoku: Sudoku, columnNumber: Int): Boolean {
         val column = sudoku.puzzle.getColumn(columnNumber)
         var valid = true
         for (i in 1..9) {
@@ -23,7 +23,7 @@ class SudokuValidator {
         return valid
     }
 
-    fun  validateGroup(sudoku: Sudoku, groupIndex: Int): Boolean {
+    fun validateGroup(sudoku: Sudoku, groupIndex: Int): Boolean {
         val column = sudoku.puzzle.getGroup(groupIndex)
         var valid = true
         for (i in 1..9) {

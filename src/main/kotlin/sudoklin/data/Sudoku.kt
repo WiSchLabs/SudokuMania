@@ -7,18 +7,18 @@ class Sudoku constructor(puzzle: SudokuPuzzle){
 class SudokuPuzzle constructor(matrix: List<List<String>>) {
     val matrix: List<List<String>> = matrix
 
-    fun getCell(x: Int, y: Int): String {
-        return matrix.get(x).get(y)
+    fun getCell(rowIndex: Int, columnIndex: Int): String {
+        return matrix.get(rowIndex).get(columnIndex)
     }
 
-    fun getRow(rowNumber: Int): List<String> {
-        return matrix[rowNumber]
+    fun getRow(rowIndex: Int): List<String> {
+        return matrix[rowIndex]
     }
 
-    fun getColumn(columnNumber: Int): List<String> {
+    fun getColumn(columnIndex: Int): List<String> {
         var column: MutableList<String> = mutableListOf<String>()
         for (i in 0..8) {
-            column.add(matrix.get(i).get(columnNumber))
+            column.add(matrix.get(i).get(columnIndex))
         }
         return column
     }
@@ -33,9 +33,5 @@ class SudokuPuzzle constructor(matrix: List<List<String>>) {
             }
         }
         return group
-    }
-
-    fun  valid_numbers(x: Int, y: Int): Int {
-        return -1;
     }
 }

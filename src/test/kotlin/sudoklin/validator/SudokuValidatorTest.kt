@@ -59,14 +59,5 @@ class SudokuValidatorTest : Spek({
                 }
             }
         }
-
-        describe("unfilled") {
-            describe("one missing number") {
-                it("should return that missing number is two") {
-                    val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
-                    assertEquals(2, sudoku.puzzle.valid_numbers(0,0))
-                }
-            }
-        }
     }
 })
