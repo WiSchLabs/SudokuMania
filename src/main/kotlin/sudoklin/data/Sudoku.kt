@@ -34,4 +34,10 @@ class SudokuPuzzle constructor(matrix: List<List<String>>) {
         }
         return group
     }
+
+    fun getGroupIndexForCell(rowIndex: Int, columnIndex: Int): Int {
+        var groupIndex = columnIndex / 3
+        groupIndex += (rowIndex % 3) * 3
+        return groupIndex
+    }
 }
