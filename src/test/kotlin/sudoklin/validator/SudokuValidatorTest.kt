@@ -2,14 +2,16 @@ package sudoklin.validator
 
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.given
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.on
 import sudoklin.impex.SudokuFileImporter
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SudokuValidatorTest : Spek({
-    describe("Given a filled sudoku") {
+    given("a filled sudoku") {
         val file_importer = SudokuFileImporter()
 
         on("a valid sudoku") {
@@ -55,6 +57,17 @@ class SudokuValidatorTest : Spek({
 
                 val validator = SudokuValidator()
                 assertFalse(validator.validateGroup(sudoku, 2))
+            }
+        }
+    }
+
+    given("an unfilled sudoku") {
+        val file_importer = SudokuFileImporter()
+
+        on("one missing number validation") {
+            it("should return that missing number is two") {
+                val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
+                assertEquals(2, sudoku.puzzle.valid_numbers(0,0))
             }
         }
     }

@@ -34,4 +34,8 @@ class SudokuPuzzle constructor(matrix: List<List<String>>) {
         }
         return group
     }
+
+    fun  valid_numbers(x: Int, y: Int): Int {
+        return -1;
+    }
 }
