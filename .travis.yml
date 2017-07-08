@@ -4,6 +4,10 @@ sudo: false
 jdk:
   - oraclejdk8
 
+env:
+  global:
+    - COVERALLS_REPO_TOKEN=R2bf8wWXuB66P1sDcsFWqQGBv4VqldWeV
+
 notifications:
   email:
     recipients:
