@@ -3,8 +3,10 @@ package sudoklin.solver
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import sudoklin.data.Sudoku
 import sudoklin.impex.SudokuFileImporter
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class SudokuSolverTest : Spek({
     describe("A sudoku") {
@@ -40,13 +42,30 @@ class SudokuSolverTest : Spek({
 
         describe("unfilled") {
             describe("valid") {
-                it("should return the number 2 for the first cell") {
+                it("should return the number 2 as candidate for the first cell") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
 
                     val solver = SudokuSolver()
                     val candidatesForCell = solver.getCandidatesForCell(sudoku, 0, 0)
                     assertEquals(1, candidatesForCell.size)
                     assertEquals(2, candidatesForCell.first())
+                }
+
+                it("should return the number 2 and 3 as candidate for the first cell") {
+                    val sudoku = file_importer.import("src/test/resources/three_missing_numbers.sdk")
+
+                    val solver = SudokuSolver()
+                    val candidatesForCell = solver.getCandidatesForCell(sudoku, 0, 0)
+                    assertEquals(2, candidatesForCell.size)
+                    assertTrue(candidatesForCell.containsAll(listOf(2, 3)))
+                }
+
+                it("should be able to solve the puzzle") {
+                    val sudoku = file_importer.import("src/test/resources/three_missing_numbers.sdk")
+
+                    val solver = SudokuSolver()
+                    val solvedSudoku: Sudoku = solver.solve(sudoku)
+                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
                 }
 
                 it("should return the number 2 for the first row") {
