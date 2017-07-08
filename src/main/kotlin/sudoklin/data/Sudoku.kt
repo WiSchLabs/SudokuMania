@@ -2,13 +2,17 @@ package sudoklin.data
 
 class Sudoku constructor(puzzle: SudokuPuzzle){
     val puzzle: SudokuPuzzle = puzzle
+
+    fun clone(): Sudoku {
+        return Sudoku(SudokuPuzzle(puzzle.matrix.toMutableList()))
+    }
 }
 
 class SudokuPuzzle constructor(matrix: List<List<String>>) {
     val matrix: List<List<String>> = matrix
 
     fun getCell(rowIndex: Int, columnIndex: Int): String {
-        return matrix.get(rowIndex).get(columnIndex)
+        return matrix[rowIndex][columnIndex]
     }
 
     fun getRow(rowIndex: Int): List<String> {
@@ -29,7 +33,7 @@ class SudokuPuzzle constructor(matrix: List<List<String>>) {
             val rowIndex = i + groupIndex - (groupIndex % 3)
             for (j in 0..2) {
                 val columnIndex = j + (groupIndex % 3) * 3
-                group.add(matrix.get(rowIndex).get(columnIndex))
+                group.add(matrix[rowIndex][columnIndex])
             }
         }
         return group
