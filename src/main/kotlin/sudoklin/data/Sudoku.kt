@@ -1,16 +1,12 @@
 package sudoklin.data
 
-class Sudoku constructor(puzzle: SudokuPuzzle){
-    val puzzle: SudokuPuzzle = puzzle
-
+class Sudoku (val puzzle: SudokuPuzzle){
     fun clone(): Sudoku {
         return Sudoku(SudokuPuzzle(puzzle.matrix))
     }
 }
 
-class SudokuPuzzle constructor(matrix: Array<Array<String>>) {
-    val matrix: Array<Array<String>> = matrix
-
+class SudokuPuzzle (val matrix: Array<Array<String>>) {
     fun getCell(rowIndex: Int, columnIndex: Int): String {
         return matrix[rowIndex][columnIndex]
     }

@@ -2,8 +2,7 @@ package sudoklin.solver
 
 import sudoklin.data.Sudoku
 
-class SudokuSolver(initialSudoku :Sudoku) {
-    val initialSudoku = initialSudoku
+class SudokuSolver(val initialSudoku: Sudoku) {
     val workingStack = ArrayList<Sudoku>()
 
     init {
