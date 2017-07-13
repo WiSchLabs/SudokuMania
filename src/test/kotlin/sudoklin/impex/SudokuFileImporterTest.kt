@@ -8,9 +8,6 @@ import sudoklin.data.SudokuPuzzle
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-/**
- * Created by sebastian on 13.06.17.
- */
 class SudokuFileImporterTest : Spek({
     describe("An importer") {
         val file_importer = SudokuFileImporter()
