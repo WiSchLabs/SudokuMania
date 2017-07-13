@@ -20,7 +20,7 @@ class SudokuPuzzle constructor(matrix: Array<Array<String>>) {
     }
 
     fun getColumn(columnIndex: Int): Array<String> {
-        var column: Array<String> = Array<String>(9, { _ -> "" })
+        val column: Array<String> = Array<String>(9, { _ -> "" })
         for (i in 0..8) {
             column[i] = matrix[i][columnIndex]
         }
@@ -28,7 +28,7 @@ class SudokuPuzzle constructor(matrix: Array<Array<String>>) {
     }
 
     fun getGroup(groupIndex: Int): Array<String> {
-        var group: MutableList<String> = mutableListOf<String>()
+        val group: MutableList<String> = mutableListOf<String>()
         for (i in 0..2) {
             val rowIndex = i + groupIndex - (groupIndex % 3)
             for (j in 0..2) {
