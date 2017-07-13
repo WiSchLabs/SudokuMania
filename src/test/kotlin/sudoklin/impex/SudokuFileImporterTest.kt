@@ -10,20 +10,20 @@ import kotlin.test.assertTrue
 
 class SudokuFileImporterTest : Spek({
     describe("An importer") {
-        val file_importer = SudokuFileImporter()
+        val fileImporter = SudokuFileImporter()
 
         it("should return a Sudoku object") {
-            val sudoku = file_importer.import("src/test/resources/example.sdk")
+            val sudoku = fileImporter.import("src/test/resources/example.sdk")
             assertTrue(sudoku is Sudoku)
         }
 
         it("should return a Sudoku object with a puzzle") {
-            val sudoku = file_importer.import("src/test/resources/example.sdk")
+            val sudoku = fileImporter.import("src/test/resources/example.sdk")
             assertTrue(sudoku.puzzle is SudokuPuzzle)
         }
 
         it("should return a Sudoku object with a puzzle with first cell filled correctly") {
-            val sudoku = file_importer.import("src/test/resources/example.sdk")
+            val sudoku = fileImporter.import("src/test/resources/example.sdk")
             assertEquals("2", sudoku.puzzle.getCell(0, 0))
         }
     }
