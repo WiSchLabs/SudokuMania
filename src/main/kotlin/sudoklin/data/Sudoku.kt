@@ -17,8 +17,8 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
 
     fun getColumn(columnIndex: Int): Array<String> {
         val column: Array<String> = Array<String>(9, { _ -> "" })
-        for (i in 0..8) {
-            column[i] = matrix[i][columnIndex]
+        for (rowIndex in 0..8) {
+            column[rowIndex] = matrix[rowIndex][columnIndex]
         }
         return column
     }
@@ -39,5 +39,14 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
         var groupIndex = columnIndex / 3
         groupIndex += (rowIndex % 3) * 3
         return groupIndex
+    }
+
+    fun isSolved(): Boolean {
+        for (rowIndex in 0..8) {
+            if (matrix[rowIndex].toList().contains(".")) {
+                return false
+            }
+        }
+        return true
     }
 }

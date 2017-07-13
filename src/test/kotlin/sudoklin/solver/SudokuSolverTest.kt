@@ -60,13 +60,21 @@ class SudokuSolverTest : Spek({
                     assertTrue(candidatesForCell.toList().containsAll(listOf(2, 3)))
                 }
 
-                /*it("should be able to solve the puzzle") {
-                    val sudoku = file_importer.import("src/test/resources/three_missing_numbers.sdk")
+                it("should be able to solve the puzzle if one number missing") {
+                    val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve(sudoku)
                     assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
-                }*/
+                }
+
+//                it("should be able to solve the puzzle if three numbers missing") {
+//                    val sudoku = file_importer.import("src/test/resources/three_missing_numbers.sdk")
+//
+//                    val solver = SudokuSolver(sudoku)
+//                    val solvedSudoku: Sudoku = solver.solve(sudoku)
+//                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+//                }
 
                 it("should return the number 2 for the first row") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")

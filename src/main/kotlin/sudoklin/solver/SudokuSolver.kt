@@ -46,14 +46,16 @@ class SudokuSolver(val initialSudoku: Sudoku) {
 
     fun solve(sudoku: Sudoku): Sudoku {
         val workingSudokuCopy = sudoku.clone()
-//        for (rowIndex in 1..9) {
-//            for (columnIndex in 1..9) {
-//                val candidates = getCandidatesForCell(rowIndex, columnIndex)
-//                if (candidates.size == 1) {
-//                    workingSudokuCopy.puzzle.matrix[rowIndex].set(columnIndex, candidates[0])
-//                }
-//            }
-//        }
+        while(!workingSudokuCopy.puzzle.isSolved()) {
+            for (rowIndex in 0..8) {
+                for (columnIndex in 0..8) {
+                    val candidates = getCandidatesForCell(rowIndex, columnIndex)
+                    if (candidates.size == 1) {
+                        workingSudokuCopy.puzzle.matrix[rowIndex][columnIndex] = candidates[0].toString()
+                    }
+                }
+            }
+        }
         return workingSudokuCopy
     }
 }
