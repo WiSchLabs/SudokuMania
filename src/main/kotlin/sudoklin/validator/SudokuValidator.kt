@@ -18,10 +18,10 @@ class SudokuValidator {
         return validateList(group)
     }
 
-    private fun validateList(list: List<String>): Boolean {
+    private fun validateList(list: Array<String>): Boolean {
         var valid = true
         for (i in 1..9) {
-            val filteredList = list.filter { it == i.toString() }
+            val filteredList = list.toList().filter { it == i.toString() }
             valid = valid && (filteredList.size <= 1)
         }
         return valid

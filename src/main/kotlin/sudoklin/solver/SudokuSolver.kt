@@ -25,7 +25,7 @@ class SudokuSolver(initialSudoku :Sudoku) {
         return getMissingNumbersInList(group)
     }
 
-    private fun getMissingNumbersInList(list: List<String>): MutableList<Int> {
+    private fun getMissingNumbersInList(list: Array<String>): List<Int> {
         var missingNumbers: MutableList<Int> = mutableListOf<Int>()
         for (i in 1..9) {
             var number: String = "" + i
@@ -36,12 +36,25 @@ class SudokuSolver(initialSudoku :Sudoku) {
         return missingNumbers
     }
 
-    fun getCandidatesForCell(rowIndex: Int, columnIndex: Int): Set<Int> {
+    fun getCandidatesForCell(rowIndex: Int, columnIndex: Int): Array<Int> {
         var missingNumbersForRow = getMissingNumbersForRow(rowIndex)
         var missingNumbersForColumn = getMissingNumbersForColumn(columnIndex)
         var groupIndex = workingStack.last().puzzle.getGroupIndexForCell(rowIndex, columnIndex)
         var missingNumbersForGroup = getMissingNumbersForGroup(groupIndex)
 
-        return missingNumbersForRow.intersect(missingNumbersForColumn).intersect(missingNumbersForGroup)
+        return missingNumbersForRow.intersect(missingNumbersForColumn).intersect(missingNumbersForGroup).toTypedArray()
+    }
+
+    fun solve(sudoku: Sudoku): Sudoku {
+        var workingSudokuCopy = sudoku.clone()
+//        for (rowIndex in 1..9) {
+//            for (columnIndex in 1..9) {
+//                val candidates = getCandidatesForCell(rowIndex, columnIndex)
+//                if (candidates.size == 1) {
+//                    workingSudokuCopy.puzzle.matrix[rowIndex].set(columnIndex, candidates[0])
+//                }
+//            }
+//        }
+        return workingSudokuCopy
     }
 }
