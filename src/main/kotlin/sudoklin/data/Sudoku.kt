@@ -26,9 +26,9 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
     fun getGroup(groupIndex: Int): Array<String> {
         val group: MutableList<String> = mutableListOf<String>()
         for (i in 0..2) {
-            val rowIndex = i + groupIndex - (groupIndex % 3)
+            val rowIndex = i + ((groupIndex / 3) * 3)
             for (j in 0..2) {
-                val columnIndex = j + (groupIndex % 3) * 3
+                val columnIndex = j + ((groupIndex % 3) * 3)
                 group.add(matrix[rowIndex][columnIndex])
             }
         }

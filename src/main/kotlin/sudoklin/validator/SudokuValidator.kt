@@ -19,11 +19,21 @@ class SudokuValidator {
     }
 
     private fun validateList(list: Array<String>): Boolean {
-        var valid = true
+        var isValid = true
         for (i in 1..9) {
-            val filteredList = list.toList().filter { it == i.toString() }
-            valid = valid && (filteredList.size <= 1)
+            val filteredList = list.filter { it == i.toString() }
+            isValid = isValid && (filteredList.size <= 1)
         }
-        return valid
+        return isValid
+    }
+
+    fun validate(sudoku: Sudoku): Boolean {
+        var isValid = true
+        for (i in 0..8) {
+            isValid = isValid && validateRow(sudoku, i)
+            isValid = isValid && validateColumn(sudoku, i)
+            isValid = isValid && validateGroup(sudoku, i)
+        }
+        return isValid
     }
 }

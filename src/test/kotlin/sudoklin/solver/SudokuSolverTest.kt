@@ -5,6 +5,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import sudoklin.data.Sudoku
 import sudoklin.impex.SudokuFileImporter
+import sudoklin.validator.SudokuValidator
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -41,6 +42,8 @@ class SudokuSolverTest : Spek({
         }
 
         describe("unfilled") {
+            val validator = SudokuValidator()
+
             describe("valid") {
                 it("should return the number 2 as candidate for the first cell") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
@@ -65,7 +68,9 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
-                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should be able to solve the puzzle if two numbers missing in one row") {
@@ -73,8 +78,9 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
-                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
-                    assertEquals("7", solvedSudoku.puzzle.getCell(0, 1))
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should be able to solve the puzzle if two numbers missing in one row 2") {
@@ -82,8 +88,9 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
-                    assertEquals("6", solvedSudoku.puzzle.getCell(3, 0))
-                    assertEquals("9", solvedSudoku.puzzle.getCell(3, 1))
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should be able to solve the puzzle if two numbers missing in one column") {
@@ -91,8 +98,9 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
-                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
-                    assertEquals("3", solvedSudoku.puzzle.getCell(1, 0))
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should be able to solve the puzzle if two numbers missing in one column 2") {
@@ -100,8 +108,9 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
-                    assertEquals("8", solvedSudoku.puzzle.getCell(3, 3))
-                    assertEquals("5", solvedSudoku.puzzle.getCell(4, 3))
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should be able to solve the puzzle if three numbers missing") {
@@ -109,7 +118,10 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
+
                     assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should be able to solve the puzzle if three numbers missing") {
@@ -117,6 +129,9 @@ class SudokuSolverTest : Spek({
 
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
                 }
 
                 it("should return the number 2 for the first row") {
