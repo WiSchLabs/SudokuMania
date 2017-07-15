@@ -37,7 +37,7 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
 
     fun getGroupIndexForCell(rowIndex: Int, columnIndex: Int): Int {
         var groupIndex = columnIndex / 3
-        groupIndex += ((rowIndex % 3) * 3 )% 3
+        groupIndex += (rowIndex / 3) * 3
         return groupIndex
     }
 
