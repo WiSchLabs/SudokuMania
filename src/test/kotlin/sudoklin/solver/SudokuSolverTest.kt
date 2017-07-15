@@ -64,17 +64,53 @@ class SudokuSolverTest : Spek({
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
 
                     val solver = SudokuSolver(sudoku)
-                    val solvedSudoku: Sudoku = solver.solve(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
                     assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
                 }
 
-//                it("should be able to solve the puzzle if three numbers missing") {
-//                    val sudoku = file_importer.import("src/test/resources/three_missing_numbers.sdk")
-//
-//                    val solver = SudokuSolver(sudoku)
-//                    val solvedSudoku: Sudoku = solver.solve(sudoku)
-//                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
-//                }
+                it("should be able to solve the puzzle if two numbers missing in one row") {
+                    val sudoku = file_importer.import("src/test/resources/two_missing_numbers_in_row.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
+                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+                    assertEquals("7", solvedSudoku.puzzle.getCell(0, 1))
+                }
+
+                it("should be able to solve the puzzle if two numbers missing in one row 2") {
+                    val sudoku = file_importer.import("src/test/resources/two_missing_numbers_in_row2.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
+                    assertEquals("6", solvedSudoku.puzzle.getCell(3, 0))
+                    assertEquals("9", solvedSudoku.puzzle.getCell(3, 1))
+                }
+
+                it("should be able to solve the puzzle if two numbers missing in one column") {
+                    val sudoku = file_importer.import("src/test/resources/two_missing_numbers_in_column.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
+                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+                    assertEquals("3", solvedSudoku.puzzle.getCell(1, 0))
+                }
+
+                it("should be able to solve the puzzle if two numbers missing in one column 2") {
+                    val sudoku = file_importer.import("src/test/resources/two_missing_numbers_in_column2.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
+                    assertEquals("8", solvedSudoku.puzzle.getCell(3, 3))
+                    assertEquals("5", solvedSudoku.puzzle.getCell(4, 3))
+                }
+
+                it("should be able to solve the puzzle if three numbers missing") {
+                    val sudoku = file_importer.import("src/test/resources/three_missing_numbers.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
+                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+                }
 
                 it("should return the number 2 for the first row") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")

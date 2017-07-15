@@ -44,18 +44,17 @@ class SudokuSolver(val initialSudoku: Sudoku) {
         return missingNumbersForRow.intersect(missingNumbersForColumn).intersect(missingNumbersForGroup).toTypedArray()
     }
 
-    fun solve(sudoku: Sudoku): Sudoku {
-        val workingSudokuCopy = sudoku.clone()
-        while(!workingSudokuCopy.puzzle.isSolved()) {
+    fun solve(): Sudoku {
+        while(!workingStack.last().puzzle.isSolved()) {
             for (rowIndex in 0..8) {
                 for (columnIndex in 0..8) {
                     val candidates = getCandidatesForCell(rowIndex, columnIndex)
                     if (candidates.size == 1) {
-                        workingSudokuCopy.puzzle.matrix[rowIndex][columnIndex] = candidates[0].toString()
+                        workingStack.last().puzzle.matrix[rowIndex][columnIndex] = candidates[0].toString()
                     }
                 }
             }
         }
-        return workingSudokuCopy
+        return workingStack.last()
     }
 }
