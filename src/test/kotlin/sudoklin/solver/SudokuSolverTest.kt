@@ -124,7 +124,7 @@ class SudokuSolverTest : Spek({
                     assertTrue(validator.validate(sudoku))
                 }
 
-                it("should be able to solve the puzzle if three numbers missing") {
+                it("should be able to solve the hard puzzle") {
                     val sudoku = file_importer.import("src/test/resources/hard_sudoku.sdk")
 
                     val solver = SudokuSolver(sudoku)
