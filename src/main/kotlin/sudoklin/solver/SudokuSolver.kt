@@ -1,9 +1,11 @@
 package sudoklin.solver
 
 import sudoklin.data.Sudoku
+import java.io.File
 
 class SudokuSolver(initialSudoku: Sudoku) {
     val workingStack = ArrayList<Sudoku>()
+    val timestamp: String = (System.currentTimeMillis() / (60 * 1000)).toString()
 
     init {
         workingStack.add(initialSudoku.clone())
@@ -50,6 +52,8 @@ class SudokuSolver(initialSudoku: Sudoku) {
         val possiblePositions: MutableList<Int> = mutableListOf<Int>()
         val alreadyInRow = row.toList().contains(number.toString())
 
+//        File("./$timestamp.log").appendText("$number in row $rowIndex: " + row.joinToString() + "   $alreadyInRow")
+
         if (!alreadyInRow) {
             for (columnIndex in 0..8) {
                 val cellIsUnsolved = row[columnIndex] == "."
@@ -66,6 +70,8 @@ class SudokuSolver(initialSudoku: Sudoku) {
             }
         }
 
+//        File("./$timestamp.log").appendText("   $possiblePositions \r\n")
+
         return possiblePositions
     }
 
@@ -74,6 +80,8 @@ class SudokuSolver(initialSudoku: Sudoku) {
         val column = workingPuzzle.getColumn(columnIndex)
         val possiblePositions: MutableList<Int> = mutableListOf<Int>()
         val alreadyInColumn = column.toList().contains(number.toString())
+
+//        File("./$timestamp.log").appendText("$number in column $columnIndex: " + column.joinToString() + "   $alreadyInColumn")
 
         if (!alreadyInColumn) {
             for (rowIndex in 0..8) {
@@ -91,6 +99,8 @@ class SudokuSolver(initialSudoku: Sudoku) {
             }
         }
 
+//        File("./$timestamp.log").appendText("   $possiblePositions \r\n")
+
         return possiblePositions
     }
 
@@ -99,6 +109,8 @@ class SudokuSolver(initialSudoku: Sudoku) {
         val group = workingPuzzle.getGroup(groupIndex)
         val possiblePositions: MutableList<Pair<Int, Int>> = mutableListOf<Pair<Int, Int>>()
         val alreadyInGoup = group.toList().contains(number.toString())
+
+//        File("./$timestamp.log").appendText("$number in group $groupIndex: " + group.joinToString() + "   $alreadyInGoup")
 
         if (!alreadyInGoup) {
             for (rowIndex in 0..8) {
@@ -118,10 +130,14 @@ class SudokuSolver(initialSudoku: Sudoku) {
             }
         }
 
+//        File("./$timestamp.log").appendText("   $possiblePositions \r\n")
+
         return possiblePositions
     }
 
     fun solve(): Sudoku {
+        var iteration = 0
+        File("./$timestamp.log").appendText("INITIAL" + workingStack.last().puzzle.toString())
         while(! workingStack.last().puzzle.isSolved()) {
             // TODO refactor:
             // use simple method until no more progress,
@@ -129,8 +145,12 @@ class SudokuSolver(initialSudoku: Sudoku) {
             // anytime a number is found, start over from step 1 again
 
             /*1*/ fillOnlyPossibleValueForCells()
+//            File("./$timestamp.log").appendText("Step $iteration a:" + workingStack.last().puzzle.toString())
+
             /*2*/ fillNumbersToTheirOnlyPossibleCell()
+//            File("./$timestamp.log").appendText("Step $iteration b:" + workingStack.last().puzzle.toString())
 //            /*3*/ findPairsInCandidatesAndEliminateOthers()
+            iteration++
         }
         return workingStack.last()
     }
@@ -156,14 +176,17 @@ class SudokuSolver(initialSudoku: Sudoku) {
                 if (possiblePositionsInRow.size == 1) {
                     workingStack.last().puzzle.matrix[i][possiblePositionsInRow[0]] = number.toString()
                 }
+//                File("./$timestamp.log").appendText(" I: $number in row" + workingStack.last().puzzle.toString())
                 val possiblePositionsInColumn = getPossiblePositionsForNumberInColumn(number, i)
                 if (possiblePositionsInColumn.size == 1) {
-                    workingStack.last().puzzle.matrix[i][possiblePositionsInColumn[0]] = number.toString()
+                    workingStack.last().puzzle.matrix[possiblePositionsInColumn[0]][i] = number.toString()
                 }
+//                File("./$timestamp.log").appendText(" II: $number in column" + workingStack.last().puzzle.toString())
                 val possiblePositionsInGroup = getPossiblePositionsForNumberInGroup(number, i)
                 if (possiblePositionsInGroup.size == 1) {
                     workingStack.last().puzzle.matrix[possiblePositionsInGroup[0].first][possiblePositionsInGroup[0].second] = number.toString()
                 }
+//                File("./$timestamp.log").appendText(" III: $number in group" + workingStack.last().puzzle.toString())
             }
         }
     }
