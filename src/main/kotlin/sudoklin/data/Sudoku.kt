@@ -49,4 +49,25 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
         }
         return true
     }
+
+    override fun toString(): String {
+        var s = "# # # # # # # # # # # # #\r\n"
+        for (rowIndex in 0..8) {
+            s += "#"
+            for (columnIndex in 0..8) {
+                s += " "
+                s += getCell(rowIndex, columnIndex)
+                if (columnIndex == 2 || columnIndex == 5) {
+                    s += " |"
+                }
+            }
+            s += " #\r\n"
+
+            if (rowIndex == 2 || rowIndex == 5) {
+                s += "#---+---+---#\r\n"
+            }
+        }
+        s += "# # # # # # # # # # # # #\r\n"
+        return s
+    }
 }
