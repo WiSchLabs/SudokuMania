@@ -138,9 +138,12 @@ class SudokuSolver(initialSudoku: Sudoku) {
     private fun fillOnlyPossibleValueForCells() {
         for (rowIndex in 0..8) {
             for (columnIndex in 0..8) {
-                val candidates = getCandidatesForCell(rowIndex, columnIndex)
-                if (candidates.size == 1) {
-                    workingStack.last().puzzle.matrix[rowIndex][columnIndex] = candidates[0].toString()
+                val cellIsUnsolved = workingStack.last().puzzle.matrix[rowIndex][columnIndex] == "."
+                if (cellIsUnsolved) {
+                    val candidates = getCandidatesForCell(rowIndex, columnIndex)
+                    if (candidates.size == 1) {
+                        workingStack.last().puzzle.matrix[rowIndex][columnIndex] = candidates[0].toString()
+                    }
                 }
             }
         }

@@ -51,7 +51,7 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
     }
 
     override fun toString(): String {
-        var s = "# # # # # # # # # # # # #\r\n"
+        var s = "\r\n# # # # # # # # # # # # #\r\n"
         for (rowIndex in 0..8) {
             s += "#"
             for (columnIndex in 0..8) {
@@ -64,7 +64,7 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
             s += " #\r\n"
 
             if (rowIndex == 2 || rowIndex == 5) {
-                s += "#---+---+---#\r\n"
+                s += "# - - - + - - - + - - - #\r\n"
             }
         }
         s += "# # # # # # # # # # # # #\r\n"
