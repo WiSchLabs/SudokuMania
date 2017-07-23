@@ -134,6 +134,36 @@ class SudokuSolverTest : Spek({
                     assertTrue(validator.validate(sudoku))
                 }
 
+//                it("should be able to solve an medium puzzle") {
+//                    val sudoku = file_importer.import("src/test/resources/medium_sudoku.sdk")
+//
+//                    val solver = SudokuSolver(sudoku, true)
+//                    val solvedSudoku: Sudoku = solver.solve()
+//
+//                    assertTrue(solvedSudoku.puzzle.isSolved())
+//                    assertTrue(validator.validate(sudoku))
+//                }
+
+//                it("should be able to solve an hard puzzle") {
+//                    val sudoku = file_importer.import("src/test/resources/hard_sudoku.sdk")
+//
+//                    val solver = SudokuSolver(sudoku)
+//                    val solvedSudoku: Sudoku = solver.solve()
+//
+//                    assertTrue(solvedSudoku.puzzle.isSolved())
+//                    assertTrue(validator.validate(sudoku))
+//                }
+
+//                it("should be able to solve an extreme hard puzzle") {
+//                    val sudoku = file_importer.import("src/test/resources/extreme_hard_sudoku.sdk")
+//
+//                    val solver = SudokuSolver(sudoku)
+//                    val solvedSudoku: Sudoku = solver.solve()
+//
+//                    assertTrue(solvedSudoku.puzzle.isSolved())
+//                    assertTrue(validator.validate(sudoku))
+//                }
+
                 it("should return the number 2 for the first row") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
 
