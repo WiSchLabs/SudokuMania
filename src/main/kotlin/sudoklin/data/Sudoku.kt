@@ -48,10 +48,6 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
         return false
     }
 
-    fun cellIsInGroup(rowIndex: Int, columnIndex: Int, groupIndex: Int): Boolean {
-        return getGroupIndexForCell(rowIndex, columnIndex) == groupIndex
-    }
-
 
     fun getRow(rowIndex: Int): Array<IntArray> {
         return matrix[rowIndex]
@@ -116,13 +112,59 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
     }
 }
 
+class NewShinySudoku() {
+    val rows: Array<SudokuRow?> = Array(9, {_ -> null})
+    val columns: Array<SudokuColumn?> = Array(9, {_ -> null})
+    val groups: Array<SudokuGroup?> = Array(9, {_ -> null})
+
+    init {
+        val cells: MutableList<SudokuCell> = ArrayList()
+        for (rowIndex in 0..8) {
+            for (columnIndex in 0..8) {
+                cells.add(SudokuCell(rowIndex, columnIndex))
+            }
+        }
+        for (index in 0..8) {
+            rows[index] = SudokuRow(index, cells.filter({ cell -> cell.rowIndex == index }).toTypedArray() )
+            columns[index] = SudokuColumn(index, cells.filter({ cell -> cell.columnIndex == index }).toTypedArray() )
+            groups[index] = SudokuGroup(index, cells.filter({ cell -> cell.groupIndex == index }).toTypedArray() )
+        }
+    }
+
+}
+
+open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {
+    fun containsSolvedNumber(number: Int): Boolean {
+        for (cell in cells) {
+            if (cell.isSolvedWithNumber(number))
+                return true
+        }
+        return false
+    }
+
+    fun isSolved() : Boolean {
+        for (cell in cells) {
+            if (!cell.isSolved())
+                return false
+        }
+        return true
+    }
+}
+
 class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
 class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
 class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
-open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {}
 
 class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int, val candidates: IntArray = IntArray(9, { it * 1 })) {
     val groupIndex: Int = getGroupIndexForCell(rowIndex, columnIndex)
+
+    fun isSolvedWithNumber(number: Int): Boolean {
+        return isSolved() && candidates[0] == number
+    }
+
+    fun isSolved(): Boolean {
+        return candidates.size == 1
+    }
 
     private fun getGroupIndexForCell(rowIndex: Int, columnIndex: Int): Int {
         var groupIndex = columnIndex / 3
