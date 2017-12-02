@@ -131,6 +131,10 @@ class NewShinySudoku() {
         }
     }
 
+    fun addSolvedNumber(rowIndex: Int, columnIndex: Int, number: Int) {
+        rows[rowIndex]!!.cells[columnIndex].candidates = IntArray(1, { number })
+    }
+
 }
 
 open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {
@@ -155,7 +159,7 @@ class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
 class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
 class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
 
-class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int, val candidates: IntArray = IntArray(9, { it * 1 })) {
+class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int, var candidates: IntArray = IntArray(9, { it * 1 })) {
     val groupIndex: Int = getGroupIndexForCell(rowIndex, columnIndex)
 
     fun isSolvedWithNumber(number: Int): Boolean {

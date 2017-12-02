@@ -4,6 +4,8 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 
 class SudokuConstructionTest : Spek({
     describe("A Cell in row and column") {
@@ -53,6 +55,23 @@ class NewSudokuTest : Spek({
                     val cell = group!!.cells[i]
                     assertEquals(9, cell.candidates.size)
                 }
+            }
+        }
+
+        it("should have one less number in the row/column/group if it was added") {
+            sudoku.addSolvedNumber(0,0, 9)
+            for (i in 1..8) {
+                val rowCell = sudoku.rows[0]!!.cells[i]
+                val columnCell = sudoku.columns[0]!!.cells[i]
+                val groupCell = sudoku.groups[0]!!.cells[i]
+                for (candidate in 1..8) {
+                    assertTrue(rowCell.candidates.contains(candidate))
+                    assertTrue(columnCell.candidates.contains(candidate))
+                    assertTrue(groupCell.candidates.contains(candidate))
+                }
+                assertFalse(rowCell.candidates.contains(9))
+                assertFalse(columnCell.candidates.contains(9))
+                assertFalse(groupCell.candidates.contains(9))
             }
         }
     }
