@@ -115,3 +115,18 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
         return s
     }
 }
+
+class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
+class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
+class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
+open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {}
+
+class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int, val candidates: IntArray = IntArray(9, { it * 1 })) {
+    val groupIndex: Int = getGroupIndexForCell(rowIndex, columnIndex)
+
+    private fun getGroupIndexForCell(rowIndex: Int, columnIndex: Int): Int {
+        var groupIndex = columnIndex / 3
+        groupIndex += (rowIndex / 3) * 3
+        return groupIndex
+    }
+}
