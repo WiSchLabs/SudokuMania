@@ -24,7 +24,8 @@ class SudokuFileImporterTest : Spek({
 
         it("should return a Sudoku object with a puzzle with first cell filled correctly") {
             val sudoku = fileImporter.import("src/test/resources/example.sdk")
-            assertEquals("2", sudoku.puzzle.getCell(0, 0))
+            assertEquals(2, sudoku.puzzle.getCell(0, 0)[0])
+            assertEquals(1, sudoku.puzzle.getCell(0, 0).size)
         }
     }
 })

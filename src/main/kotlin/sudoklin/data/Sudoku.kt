@@ -6,25 +6,67 @@ class Sudoku (val puzzle: SudokuPuzzle){
     }
 }
 
-class SudokuPuzzle (val matrix: Array<Array<String>>) {
-    fun getCell(rowIndex: Int, columnIndex: Int): String {
+class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
+    fun getCell(rowIndex: Int, columnIndex: Int): IntArray {
         return matrix[rowIndex][columnIndex]
     }
 
-    fun getRow(rowIndex: Int): Array<String> {
+    fun fixedNumberIsInCell(rowIndex: Int, columnIndex: Int, number: Int): Boolean {
+        val cell = getCell(rowIndex, columnIndex)
+        return cellIsFixed(rowIndex, columnIndex) && cell[0] == number
+    }
+
+
+    fun cellIsFixed(rowIndex: Int, columnIndex: Int): Boolean {
+        val cell = getCell(rowIndex, columnIndex)
+        return cell.size == 1
+    }
+
+    fun fixedNumberIsInColumn(columnIndex: Int, number: Int): Boolean {
+        for (rowIndex in 0..8) {
+            if (fixedNumberIsInCell(rowIndex, columnIndex, number))
+                return true
+        }
+        return false
+    }
+
+    fun fixedNumberIsInRow(rowIndex: Int, number: Int): Boolean {
+        for (columnIndex in 0..8) {
+            if (fixedNumberIsInCell(rowIndex, columnIndex, number))
+                return true
+        }
+        return false
+    }
+
+    fun fixedNumberIsInGroup(groupIndex: Int, number: Int): Boolean {
+        val group = getGroup(groupIndex)
+        for (cell in group) {
+            if (cell.size == 1 && cell[0] == number) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun cellIsInGroup(rowIndex: Int, columnIndex: Int, groupIndex: Int): Boolean {
+        return getGroupIndexForCell(rowIndex, columnIndex) == groupIndex
+    }
+
+
+    fun getRow(rowIndex: Int): Array<IntArray> {
         return matrix[rowIndex]
     }
 
-    fun getColumn(columnIndex: Int): Array<String> {
-        val column: Array<String> = Array<String>(9, { _ -> "" })
+    fun getColumn(columnIndex: Int): Array<IntArray> {
+        val column: Array<IntArray> = Array<IntArray>(9, { IntArray(9) })
         for (rowIndex in 0..8) {
             column[rowIndex] = matrix[rowIndex][columnIndex]
         }
         return column
     }
 
-    fun getGroup(groupIndex: Int): Array<String> {
-        val group: MutableList<String> = mutableListOf<String>()
+    fun getGroup(groupIndex: Int): Array<IntArray> {
+        val group: MutableList<IntArray> = mutableListOf<IntArray>()
         for (i in 0..2) {
             val rowIndex = i + ((groupIndex / 3) * 3)
             for (j in 0..2) {
@@ -43,8 +85,10 @@ class SudokuPuzzle (val matrix: Array<Array<String>>) {
 
     fun isSolved(): Boolean {
         for (rowIndex in 0..8) {
-            if (matrix[rowIndex].toList().contains(".")) {
-                return false
+            for (columnIndex in 0..8) {
+                if (matrix[rowIndex][columnIndex].size > 1) {
+                    return false
+                }
             }
         }
         return true

@@ -119,7 +119,8 @@ class SudokuSolverTest : Spek({
                     val solver = SudokuSolver(sudoku)
                     val solvedSudoku: Sudoku = solver.solve()
 
-                    assertEquals("2", solvedSudoku.puzzle.getCell(0, 0))
+                    assertEquals(2, sudoku.puzzle.getCell(0, 0)[0])
+                    assertEquals(1, sudoku.puzzle.getCell(0, 0).size)
                     assertTrue(solvedSudoku.puzzle.isSolved())
                     assertTrue(validator.validate(sudoku))
                 }
@@ -144,15 +145,15 @@ class SudokuSolverTest : Spek({
 //                    assertTrue(validator.validate(sudoku))
 //                }
 
-//                it("should be able to solve an hard puzzle") {
-//                    val sudoku = file_importer.import("src/test/resources/hard_sudoku.sdk")
-//
-//                    val solver = SudokuSolver(sudoku)
-//                    val solvedSudoku: Sudoku = solver.solve()
-//
-//                    assertTrue(solvedSudoku.puzzle.isSolved())
-//                    assertTrue(validator.validate(sudoku))
-//                }
+                it("should be able to solve an hard puzzle") {
+                    val sudoku = file_importer.import("src/test/resources/hard_sudoku.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku: Sudoku = solver.solve()
+
+                    assertTrue(solvedSudoku.puzzle.isSolved())
+                    assertTrue(validator.validate(sudoku))
+                }
 
 //                it("should be able to solve an extreme hard puzzle") {
 //                    val sudoku = file_importer.import("src/test/resources/extreme_hard_sudoku.sdk")
