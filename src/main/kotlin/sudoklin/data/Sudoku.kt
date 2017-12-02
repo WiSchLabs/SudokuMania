@@ -132,9 +132,15 @@ class NewShinySudoku() {
     }
 
     fun addSolvedNumber(rowIndex: Int, columnIndex: Int, number: Int) {
-        rows[rowIndex]!!.cells[columnIndex].candidates.clear()
-        rows[rowIndex]!!.cells[columnIndex].candidates.add(number)
-        println("" + rows[rowIndex]!!.cells[columnIndex].candidates)
+        val sudokuCell = rows[rowIndex]!!.cells[columnIndex]
+        val groupIndex = sudokuCell.groupIndex
+
+        sudokuCell.candidates.clear()
+        sudokuCell.candidates.add(number)
+
+        rows[rowIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        columns[columnIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        groups[groupIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
     }
 
 }
@@ -155,6 +161,13 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
         }
         return true
     }
+
+    fun purgeCandidateNumberFromUnsolvedCells(number: Int) {
+        for (cell in cells) {
+            if (!cell.isSolved())
+                cell.candidates.remove(number)
+        }
+    }
 }
 
 class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
@@ -162,11 +175,11 @@ class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cel
 class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
 
 class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
-                             var candidates: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5, 6, 7, 8, 9)) {
+                             var candidates: MutableSet<Int> = mutableSetOf(1, 2, 3, 4, 5, 6, 7, 8, 9)) {
     val groupIndex: Int = getGroupIndexForCell(rowIndex, columnIndex)
 
     fun isSolvedWithNumber(number: Int): Boolean {
-        return isSolved() && candidates[0] == number
+        return isSolved() && candidates.contains(number)
     }
 
     fun isSolved(): Boolean {

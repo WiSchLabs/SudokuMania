@@ -9,18 +9,19 @@ import kotlin.test.assertFalse
 
 class SudokuConstructionTest : Spek({
     describe("A Cell in row and column") {
-        val cell = SudokuCell(0, 0, mutableListOf(5))
+        val cell = SudokuCell(0, 0, mutableSetOf(5))
         val row = SudokuRow(0, Array(1, {cell}))
         val column = SudokuColumn(0, Array(1, {cell}))
 
         it("should be the same after being updated") {
-            assertEquals(5, row.cells[0].candidates[0])
-            assertEquals(5, column.cells[0].candidates[0])
+            assertEquals(5, row.cells[0].candidates.first())
+            assertEquals(5, column.cells[0].candidates.first())
 
-            cell.candidates[0] = 4
+            cell.candidates.clear()
+            cell.candidates.add(4)
 
-            assertEquals(4, row.cells[0].candidates[0])
-            assertEquals(4, column.cells[0].candidates[0])
+            assertEquals(4, row.cells[0].candidates.first())
+            assertEquals(4, column.cells[0].candidates.first())
         }
     }
 })
@@ -68,12 +69,6 @@ class NewSudokuTest : Spek({
                     assertTrue(rowCell.candidates.contains(candidate))
                     assertTrue(columnCell.candidates.contains(candidate))
                     assertTrue(groupCell.candidates.contains(candidate))
-                }
-                println("row/column/group")
-                for (i in 0..8) {
-                    println("" + rowCell.candidates[i] + "/" +
-                              columnCell.candidates[i] + "/" +
-                               groupCell.candidates[i])
                 }
                 assertFalse(rowCell.candidates.contains(9))
                 assertFalse(columnCell.candidates.contains(9))
