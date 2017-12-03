@@ -3,6 +3,7 @@ package sudoklin.data
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertFalse
@@ -74,6 +75,9 @@ class NewSudokuTest : Spek({
                 assertFalse(columnCell.candidates.contains(9))
                 assertFalse(groupCell.candidates.contains(9))
             }
+            val cell = sudoku.getCell(0,0)
+            assertEquals(9, cell.candidates.first())
+            assertEquals("9", cell.toString())
         }
     }
 })

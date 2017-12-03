@@ -96,7 +96,7 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
             s += "#"
             for (columnIndex in 0..8) {
                 s += " "
-                s += getCell(rowIndex, columnIndex)
+                s += getCell(rowIndex, columnIndex).toString()
                 if (columnIndex == 2 || columnIndex == 5) {
                     s += " |"
                 }
@@ -217,9 +217,9 @@ class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
     }
 
     override fun toString(): String {
-        if (isSolved())
-            return "."
+        return if (isSolved())
+            candidates.first().toString()
         else
-            return candidates.first().toString()
+            "."
     }
 }
