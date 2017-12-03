@@ -171,7 +171,7 @@ class NewShinySudoku() {
 
 open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {
     fun containsSolvedNumber(number: Int): Boolean {
-        for (cell in cells) {
+        cells.forEach { cell ->
             if (cell.isSolvedWithNumber(number))
                 return true
         }
@@ -179,11 +179,7 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
     }
 
     fun isSolved() : Boolean {
-        for (cell in cells) {
-            if (!cell.isSolved())
-                return false
-        }
-        return true
+        return cells.any { it.isSolved() }
     }
 
     fun purgeCandidateNumberFromUnsolvedCells(number: Int) {
