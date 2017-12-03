@@ -143,6 +143,30 @@ class NewShinySudoku() {
         groups[groupIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
     }
 
+    fun getCell(rowIndex: Int, columnIndex: Int): SudokuCell {
+        return rows[rowIndex]!!.cells[columnIndex]
+    }
+
+    override fun toString(): String {
+        var s = "\r\n# # # # # # # # # # # # #\r\n"
+        for (rowIndex in 0..8) {
+            s += "#"
+            for (columnIndex in 0..8) {
+                s += " "
+                s += getCell(rowIndex, columnIndex)
+                if (columnIndex == 2 || columnIndex == 5) {
+                    s += " |"
+                }
+            }
+            s += " #\r\n"
+
+            if (rowIndex == 2 || rowIndex == 5) {
+                s += "# - - - + - - - + - - - #\r\n"
+            }
+        }
+        s += "# # # # # # # # # # # # #\r\n"
+        return s
+    }
 }
 
 open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {
@@ -190,5 +214,12 @@ class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
         var groupIndex = columnIndex / 3
         groupIndex += (rowIndex / 3) * 3
         return groupIndex
+    }
+
+    override fun toString(): String {
+        if (isSolved())
+            return "."
+        else
+            return candidates.first().toString()
     }
 }
