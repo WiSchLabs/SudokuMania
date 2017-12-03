@@ -25,8 +25,9 @@ class SudokuFileImporter {
                 input = splittedLine.toTypedArray()
                 for (literal in input) {
                     if (literal != ".") {
-                        matrix[rowCounter][columnCounter] = kotlin.IntArray(1, { _ -> Integer.parseInt(literal) })
-                        sudoku.addSolvedNumber(rowCounter, columnCounter, Integer.parseInt(literal))
+                        val number = Integer.parseInt(literal)
+                        matrix[rowCounter][columnCounter] = IntArray(1, { number })
+                        sudoku.addSolvedNumber(rowCounter, columnCounter, number)
                     }
                     columnCounter++
                 }
