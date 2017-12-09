@@ -112,10 +112,13 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
     }
 }
 
-class NewShinySudoku() {
-    val rows: Array<SudokuRow?> = Array(9, {_ -> null})
-    val columns: Array<SudokuColumn?> = Array(9, {_ -> null})
-    val groups: Array<SudokuGroup?> = Array(9, {_ -> null})
+class NewShinySudoku(val rows: Array<SudokuRow?> = Array(9, {_ -> null}),
+                     val columns: Array<SudokuColumn?> = Array(9, {_ -> null}),
+                     val groups: Array<SudokuGroup?> = Array(9, {_ -> null})) {
+
+    fun clone(): NewShinySudoku {
+        return NewShinySudoku(rows, columns, groups)
+    }
 
     init {
         val cells: MutableList<SudokuCell> = ArrayList()
@@ -145,6 +148,29 @@ class NewShinySudoku() {
 
     fun getCell(rowIndex: Int, columnIndex: Int): SudokuCell {
         return rows[rowIndex]!!.cells[columnIndex]
+    }
+
+    fun isSolved(): Boolean {
+        for (i in 0..8) {
+            for (j in 0..8) {
+                if (!getCell(i, j).isSolved())
+                    return false
+            }
+        }
+        return true
+    }
+
+    fun isValid(): Boolean {
+        var isValid = true
+        for (i in 0..8) {
+            if (!rows[i]!!.isValid())
+                isValid = false
+            if (!columns[i]!!.isValid())
+                isValid = false
+            if (!groups[i]!!.isValid())
+                isValid = false
+        }
+        return isValid
     }
 
     override fun toString(): String {
@@ -178,8 +204,22 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
         return false
     }
 
-    fun isSolved() : Boolean {
+    fun isSolved(): Boolean {
         return cells.any { it.isSolved() }
+    }
+
+    fun isValid(): Boolean {
+        var aggregated_numbers: MutableSet<Int> = mutableSetOf()
+        cells.forEach { cell ->
+            if (cell.isSolved()) {
+                if (aggregated_numbers.contains(cell.candidates.first())) {
+                    return false
+                } else {
+                    aggregated_numbers.add(cell.candidates.first())
+                }
+            }
+        }
+        return true
     }
 
     fun purgeCandidateNumberFromUnsolvedCells(number: Int) {
@@ -190,9 +230,9 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
     }
 }
 
-class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
-class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
-class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
+class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
+class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
+class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
 
 class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
                              var candidates: MutableSet<Int> = mutableSetOf(1, 2, 3, 4, 5, 6, 7, 8, 9)) {
