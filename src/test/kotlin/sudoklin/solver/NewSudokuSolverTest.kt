@@ -44,7 +44,6 @@ class NewSudokuSolverTest : Spek({
             describe("valid") {
                 /*it("should return the number 2 as candidate for the first cell") {
                     val sudoku = file_importer.import("src/test/resources/one_missing_number.sdk")
-                    print(sudoku)
 
                     val solver = NewSudokuSolver(sudoku)
                     val candidatesForCell = solver.getCandidatesForCell(0, 0)
@@ -117,8 +116,8 @@ class NewSudokuSolverTest : Spek({
                     val solver = NewSudokuSolver(sudoku)
                     val solvedSudoku = solver.solve()
 
-                    assertEquals(2, sudoku.getCell(0, 0).candidates.first())
-                    assertEquals(1, sudoku.getCell(0, 0).candidates.size)
+                    assertEquals(2, solvedSudoku.getCell(0, 0).candidates.first())
+                    assertEquals(1, solvedSudoku.getCell(0, 0).candidates.size)
                     assertTrue(solvedSudoku.isSolved())
                     assertTrue(solvedSudoku.isValid())
                 }
@@ -133,7 +132,7 @@ class NewSudokuSolverTest : Spek({
                     assertTrue(solvedSudoku.isValid())
                 }
 
-/*                it("should be able to solve an medium puzzle") {
+                it("should be able to solve an medium puzzle") {
                     val sudoku = file_importer.import("src/test/resources/medium_sudoku.sdk")
 
                     val solver = NewSudokuSolver(sudoku)
@@ -141,7 +140,7 @@ class NewSudokuSolverTest : Spek({
 
                     assertTrue(solvedSudoku.isSolved())
                     assertTrue(solvedSudoku.isValid())
-                }*/
+                }
 
                 it("should be able to solve an hard puzzle") {
                     val sudoku = file_importer.import("src/test/resources/hard_sudoku.sdk")
