@@ -234,12 +234,12 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, val log: Boolean = false) {
     }
 
     fun getPossiblePositionsForNumberInColumn(number: Int, columnIndex: Int): List<Int> {
-        val row = sudoku.columns[columnIndex]
+        val column = sudoku.columns[columnIndex]
 
-        val alreadyInRow = sudoku.columns[columnIndex]!!.containsSolvedNumber(number)
-        if (log) File("./$timestamp.log").appendText("$number in column $columnIndex: " + row.toString() + "   $alreadyInRow")
+        val alreadyInColumn = sudoku.columns[columnIndex]!!.containsSolvedNumber(number)
+        if (log) File("./$timestamp.log").appendText("$number in column $columnIndex: " + column.toString() + "   $alreadyInColumn")
 
-        if (!alreadyInRow) {
+        if (!alreadyInColumn) {
             return sudoku.columns[columnIndex]!!.cells.filter { it.candidates.contains(number) }.map { it.rowIndex }
         }
 
@@ -248,31 +248,15 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, val log: Boolean = false) {
 
     fun getPossiblePositionsForNumberInGroup(number: Int, groupIndex: Int): List<Pair<Int, Int>> {
         val group = sudoku.groups[groupIndex]
-        val possiblePositions: MutableList<Pair<Int, Int>> = mutableListOf<Pair<Int, Int>>()
-        val alreadyInGoup = sudoku.groups[groupIndex]!!.containsSolvedNumber(number)
 
-        if (log) File("./$timestamp.log").appendText("$number in group $groupIndex: " + group.toString() + "   $alreadyInGoup")
+        val alreadyInGroup = sudoku.groups[groupIndex]!!.containsSolvedNumber(number)
+        if (log) File("./$timestamp.log").appendText("$number in group $groupIndex: " + group.toString() + "   $alreadyInGroup")
 
-        if (!alreadyInGoup) {
-            for (rowIndex in 0..8) {
-                for (columnIndex in 0..8) {
-                    if (sudoku.getCell(rowIndex, columnIndex).groupIndex == groupIndex) {
-                        if (!sudoku.getCell(rowIndex, columnIndex).isSolved()) {
-                            val alreadyInRow = sudoku.rows[rowIndex]!!.containsSolvedNumber(number)
-                            val alreadyInColumn = sudoku.columns[columnIndex]!!.containsSolvedNumber(number)
-
-                            if (! (alreadyInRow || alreadyInColumn)) {
-                                possiblePositions.add(Pair(rowIndex, columnIndex))
-                            }
-                        }
-                    }
-                }
-            }
+        if (!alreadyInGroup) {
+            return sudoku.groups[groupIndex]!!.cells.filter { it.candidates.contains(number) }.map { Pair(it.rowIndex, it.columnIndex) }
         }
 
-        if (log) File("./$timestamp.log").appendText("   $possiblePositions \r\n")
-
-        return possiblePositions
+        return listOf()
     }
 
     fun solve(): NewShinySudoku {
