@@ -115,9 +115,9 @@ class NewShinySudoku(val rows: Array<SudokuRow?> = Array(9, {_ -> null}),
             }
         }
         for (index in 0..8) {
-            rows[index] = SudokuRow(index, cells.filter({ cell -> cell.rowIndex == index }).toTypedArray() )
-            columns[index] = SudokuColumn(index, cells.filter({ cell -> cell.columnIndex == index }).toTypedArray() )
-            groups[index] = SudokuGroup(index, cells.filter({ cell -> cell.groupIndex == index }).toTypedArray() )
+            rows[index] = SudokuRow(cells.filter({ cell -> cell.rowIndex == index }).toTypedArray() )
+            columns[index] = SudokuColumn(cells.filter({ cell -> cell.columnIndex == index }).toTypedArray() )
+            groups[index] = SudokuGroup(cells.filter({ cell -> cell.groupIndex == index }).toTypedArray() )
         }
     }
 
@@ -181,7 +181,7 @@ class NewShinySudoku(val rows: Array<SudokuRow?> = Array(9, {_ -> null}),
     }
 }
 
-open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {
+open class SudokuList constructor(val cells: Array<SudokuCell>) {
     fun containsSolvedNumber(number: Int): Boolean {
         cells.forEach { cell ->
             if (cell.isSolvedWithNumber(number))
@@ -215,9 +215,9 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
     }
 }
 
-class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
-class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
-class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells)
+class SudokuRow(cells: Array<SudokuCell>) : SudokuList(cells)
+class SudokuColumn(cells: Array<SudokuCell>) : SudokuList(cells)
+class SudokuGroup(cells: Array<SudokuCell>) : SudokuList(cells)
 
 class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
                              var candidates: MutableSet<Int> = mutableSetOf(1, 2, 3, 4, 5, 6, 7, 8, 9)) {

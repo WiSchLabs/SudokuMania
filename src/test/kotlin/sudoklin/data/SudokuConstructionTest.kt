@@ -10,8 +10,8 @@ import kotlin.test.assertFalse
 class SudokuConstructionTest : Spek({
     describe("A Cell in row and column") {
         val cell = SudokuCell(0, 0, mutableSetOf(5))
-        val row = SudokuRow(0, Array(1, {cell}))
-        val column = SudokuColumn(0, Array(1, {cell}))
+        val row = SudokuRow(Array(1, {cell}))
+        val column = SudokuColumn(Array(1, {cell}))
 
         it("should be the same after being updated") {
             assertEquals(5, row.cells[0].candidates.first())
