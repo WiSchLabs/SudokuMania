@@ -2,6 +2,7 @@ package sudoklin.solver
 
 import sudoklin.data.NewShinySudoku
 import sudoklin.data.Sudoku
+import sudoklin.data.SudokuList
 import java.io.File
 
 class SudokuSolver(initialSudoku: Sudoku, val log: Boolean = false) {
@@ -186,8 +187,8 @@ class SudokuSolver(initialSudoku: Sudoku, val log: Boolean = false) {
     }
 }
 
-class NewSudokuSolver(val sudoku: NewShinySudoku, val log: Boolean = false) {
-    val timestamp: String = (System.currentTimeMillis() / (60 * 1000)).toString()
+class NewSudokuSolver(val sudoku: NewShinySudoku, private val log: Boolean = false) {
+    private val timestamp: String = (System.currentTimeMillis() / (60 * 1000)).toString()
 
     fun getMissingNumbersForRow(rowIndex: Int): List<Int> {
         val puzzle = sudoku
@@ -268,17 +269,14 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, val log: Boolean = false) {
             // then use next more complicated method,
             // anytime a number is found, start over from step 1 again
 
-//            /*1*/ fillOnlyPossibleValueForCells()
-//            if (log) File("./$timestamp.log").appendText("Step $iteration a:" + workingStack.last().puzzle.toString())
-
             /*2*/
-            val changed = fillNumbersToTheirOnlyPossibleCell()
+            var changed = fillNumbersToTheirOnlyPossibleCell()
+            if (log) File("./$timestamp.log").appendText("Step $iteration b:" + sudoku.toString())
+            /*3*/ changed = changed || findPairsOfCandidatesAndEliminateOthers()
+            if (log) File("./$timestamp.log").appendText("Step $iteration c:" + sudoku.toString())
+            iteration++
             if (!changed)
                 return sudoku
-            if (log) File("./$timestamp.log").appendText("Step $iteration b:" + sudoku.toString())
-//            /*3*/ findPairsInCandidatesAndEliminateOthers()
-//            if (log) File("./$timestamp.log").appendText("Step $iteration c:" + workingStack.last().puzzle.toString())
-            iteration++
         }
         return sudoku
     }
@@ -286,25 +284,25 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, val log: Boolean = false) {
     private fun fillNumbersToTheirOnlyPossibleCell(): Boolean {
         var changed = false
         for (number in 1..9) {
-            for (i in 0..8) {
-                val possiblePositionsInRow = getPossiblePositionsForNumberInRow(number, i)
-                if (possiblePositionsInRow.size == 1 && !sudoku.getCell(i, possiblePositionsInRow[0]).isSolved()) {
+            for (index in 0..8) {
+                val possiblePositionsInRow = getPossiblePositionsForNumberInRow(number, index)
+                if (possiblePositionsInRow.size == 1 && !sudoku.getCell(index, possiblePositionsInRow[0]).isSolved()) {
 
-                    sudoku.addSolvedNumber(i, possiblePositionsInRow[0], number)
+                    sudoku.addSolvedNumber(index, possiblePositionsInRow[0], number)
                     changed = true
                 }
                 if (log) File("./$timestamp.log").appendText(" I: $number in row" + sudoku.toString())
 
-                val possiblePositionsInColumn = getPossiblePositionsForNumberInColumn(number, i)
-                if (possiblePositionsInColumn.size == 1 && !sudoku.getCell(possiblePositionsInColumn[0], i).isSolved()) {
+                val possiblePositionsInColumn = getPossiblePositionsForNumberInColumn(number, index)
+                if (possiblePositionsInColumn.size == 1 && !sudoku.getCell(possiblePositionsInColumn[0], index).isSolved()) {
 
-                    sudoku.addSolvedNumber(possiblePositionsInColumn[0], i, number)
+                    sudoku.addSolvedNumber(possiblePositionsInColumn[0], index, number)
 
                     changed = true
                 }
                 if (log) File("./$timestamp.log").appendText(" II: $number in column" + sudoku.toString())
 
-                val possiblePositionsInGroup = getPossiblePositionsForNumberInGroup(number, i)
+                val possiblePositionsInGroup = getPossiblePositionsForNumberInGroup(number, index)
                 if (possiblePositionsInGroup.size == 1 && !sudoku.getCell(possiblePositionsInGroup[0].first, possiblePositionsInGroup[0].second).isSolved()) {
                     val c = sudoku.getCell(possiblePositionsInGroup[0].first,
                             possiblePositionsInGroup[0].second)
@@ -314,6 +312,34 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, val log: Boolean = false) {
                     changed = true
                 }
                 if (log) File("./$timestamp.log").appendText(" III: $number in group" + sudoku.toString())
+            }
+        }
+        return changed
+    }
+
+    private fun findPairsOfCandidatesAndEliminateOthers(): Boolean {
+        var changed = false
+        for (list in sudoku.rows) {
+            changed = findPairsOfCandidatesInList(list)
+        }
+        for (list in sudoku.columns) {
+            changed = findPairsOfCandidatesInList(list)
+        }
+        for (list in sudoku.groups) {
+            changed = findPairsOfCandidatesInList(list)
+        }
+        return changed
+    }
+
+    private fun findPairsOfCandidatesInList(list: SudokuList?): Boolean {
+        var changed = false
+        val twoItemCellsInList = list!!.cells.filter { it.candidates.size == 2 }
+        for (cell in twoItemCellsInList) {
+            val samezies = twoItemCellsInList.filterNot { it == cell }.filter { it.candidates.containsAll(cell.candidates) }
+            if (samezies.size == 1) {
+                list.cells.filterNot { it == cell || it == samezies[0] }.forEach { it.candidates.removeAll(cell.candidates) }
+                if (log) File("./$timestamp.log").appendText("Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex} and ${samezies[0].rowIndex}-${samezies[0].columnIndex}\n")
+                changed = true
             }
         }
         return changed
