@@ -208,13 +208,13 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
     }
 
     fun isValid(): Boolean {
-        var aggregated_numbers: MutableSet<Int> = mutableSetOf()
+        val aggregatedNumbers: MutableSet<Int> = mutableSetOf()
         cells.forEach { cell ->
             if (cell.isSolved()) {
-                if (aggregated_numbers.contains(cell.candidates.first())) {
+                if (aggregatedNumbers.contains(cell.candidates.first())) {
                     return false
                 } else {
-                    aggregated_numbers.add(cell.candidates.first())
+                    aggregatedNumbers.add(cell.candidates.first())
                 }
             }
         }
