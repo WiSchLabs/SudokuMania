@@ -23,29 +23,16 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
     }
 
     fun fixedNumberIsInColumn(columnIndex: Int, number: Int): Boolean {
-        for (rowIndex in 0..8) {
-            if (fixedNumberIsInCell(rowIndex, columnIndex, number))
-                return true
-        }
-        return false
+        return (0..8).any { fixedNumberIsInCell(it, columnIndex, number) }
     }
 
     fun fixedNumberIsInRow(rowIndex: Int, number: Int): Boolean {
-        for (columnIndex in 0..8) {
-            if (fixedNumberIsInCell(rowIndex, columnIndex, number))
-                return true
-        }
-        return false
+        return (0..8).any { fixedNumberIsInCell(rowIndex, it, number) }
     }
 
     fun fixedNumberIsInGroup(groupIndex: Int, number: Int): Boolean {
         val group = getGroup(groupIndex)
-        for (cell in group) {
-            if (cell.size == 1 && cell[0] == number) {
-                return true
-            }
-        }
-        return false
+        return group.any { it.size == 1 && it[0] == number }
     }
 
 
@@ -222,10 +209,9 @@ open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) 
     }
 
     fun purgeCandidateNumberFromUnsolvedCells(number: Int) {
-        for (cell in cells) {
-            if (!cell.isSolved())
-                cell.candidates.remove(number)
-        }
+        cells
+                .filterNot { it.isSolved() }
+                .forEach { it.candidates.remove(number) }
     }
 }
 
