@@ -161,16 +161,15 @@ class NewShinySudoku(val rows: Array<SudokuRow?> = Array(9, {_ -> null}),
     }
 
     fun isValid(): Boolean {
-        var isValid = true
         for (i in 0..8) {
             if (!rows[i]!!.isValid())
-                isValid = false
+                return false
             if (!columns[i]!!.isValid())
-                isValid = false
+                return false
             if (!groups[i]!!.isValid())
-                isValid = false
+                return false
         }
-        return isValid
+        return true
     }
 
     override fun toString(): String {
