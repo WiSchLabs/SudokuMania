@@ -319,14 +319,14 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, private val log: Boolean = fal
 
     private fun findPairsOfCandidatesAndEliminateOthers(): Boolean {
         var changed = false
-        for (list in sudoku.rows) {
-            changed = findPairsOfCandidatesInList(list)
+        for (row in sudoku.rows) {
+            changed = findPairsOfCandidatesInList(row)
         }
-        for (list in sudoku.columns) {
-            changed = findPairsOfCandidatesInList(list)
+        for (column in sudoku.columns) {
+            changed = findPairsOfCandidatesInList(column)
         }
-        for (list in sudoku.groups) {
-            changed = findPairsOfCandidatesInList(list)
+        for (group in sudoku.groups) {
+            changed = findPairsOfCandidatesInList(group)
         }
         return changed
     }
@@ -335,10 +335,10 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, private val log: Boolean = fal
         var changed = false
         val twoItemCellsInList = list!!.cells.filter { it.candidates.size == 2 }
         for (cell in twoItemCellsInList) {
-            val samezies = twoItemCellsInList.filterNot { it == cell }.filter { it.candidates.containsAll(cell.candidates) }
-            if (samezies.size == 1) {
-                list.cells.filterNot { it == cell || it == samezies[0] }.forEach { it.candidates.removeAll(cell.candidates) }
-                if (log) File("./$timestamp.log").appendText("Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex} and ${samezies[0].rowIndex}-${samezies[0].columnIndex}\n")
+            val cellsWithEqualCandidates = twoItemCellsInList.filterNot { it == cell }.filter { it.candidates.containsAll(cell.candidates) }
+            if (cellsWithEqualCandidates.size == 1) { // if there are more, the puzzle is not solvable
+                list.cells.filterNot { it == cell || it == cellsWithEqualCandidates[0] }.forEach { it.candidates.removeAll(cell.candidates) }
+                if (log) File("./$timestamp.log").appendText("Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex} and ${cellsWithEqualCandidates[0].rowIndex}-${cellsWithEqualCandidates[0].columnIndex}\n")
                 changed = true
             }
         }
