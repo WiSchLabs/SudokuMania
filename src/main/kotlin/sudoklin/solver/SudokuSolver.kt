@@ -320,13 +320,13 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, private val log: Boolean = fal
     private fun findPairsOfCandidatesAndEliminateOthers(): Boolean {
         var changed = false
         for (row in sudoku.rows) {
-            changed = findPairsOfCandidatesInList(row)
+            changed = changed || findPairsOfCandidatesInList(row)
         }
         for (column in sudoku.columns) {
-            changed = findPairsOfCandidatesInList(column)
+            changed = changed || findPairsOfCandidatesInList(column)
         }
         for (group in sudoku.groups) {
-            changed = findPairsOfCandidatesInList(group)
+            changed = changed || findPairsOfCandidatesInList(group)
         }
         return changed
     }
