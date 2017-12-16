@@ -80,7 +80,7 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
     fun solve(): Sudoku {
         var iteration = 0
         if (log) File("./$timestamp.log").appendText("INITIAL" + sudoku.toString())
-        while(!sudoku.isSolved()) {
+        while (!sudoku.isSolved()) {
             // TODO refactor:
             // use simple method until no more progress,
             // then use next more complicated method,
@@ -134,16 +134,16 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
         return changed
     }
 
-    private fun findPairsOfCandidatesAndEliminateOthers(): Boolean {
+    fun findPairsOfCandidatesAndEliminateOthers(): Boolean {
         var changed = false
         for (row in sudoku.rows) {
-            changed = changed || findPairsOfCandidatesInList(row)
+            changed = findPairsOfCandidatesInList(row) || changed
         }
         for (column in sudoku.columns) {
-            changed = changed || findPairsOfCandidatesInList(column)
+            changed = findPairsOfCandidatesInList(column) || changed
         }
         for (group in sudoku.groups) {
-            changed = changed || findPairsOfCandidatesInList(group)
+            changed = findPairsOfCandidatesInList(group) || changed
         }
         return changed
     }
@@ -151,6 +151,7 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
     private fun findPairsOfCandidatesInList(list: SudokuList?): Boolean {
         val sumOfCandidatesBefore = list!!.cells.sumBy { it.candidates.size }
         val twoItemCellsInList = list.cells.filter { it.candidates.size == 2 }
+
         for (cell in twoItemCellsInList) {
             val cellsWithEqualCandidates = twoItemCellsInList.filterNot { it == cell }
                                                              .filter { it.candidates.containsAll(cell.candidates) }
