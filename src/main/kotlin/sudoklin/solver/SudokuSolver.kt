@@ -89,7 +89,7 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
             /*2*/
             var changed = fillNumbersToTheirOnlyPossibleCell()
             if (log) File("./$timestamp.log").appendText("Step $iteration b:" + sudoku.toString())
-            /*3*/ changed = changed || findPairsOfCandidatesAndEliminateOthers()
+            /*3*/ changed = changed || cleanCombinationsOfCandidates()
             if (log) File("./$timestamp.log").appendText("Step $iteration c:" + sudoku.toString())
             iteration++
             if (!changed)
@@ -134,36 +134,42 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
         return changed
     }
 
-    fun findPairsOfCandidatesAndEliminateOthers(): Boolean {
+    fun cleanCombinationsOfCandidates(): Boolean {
         var changed = false
         for (row in sudoku.rows) {
-            changed = findPairsOfCandidatesInList(row) || changed
+            changed = cleanCombinationsOfCandidatesInList(row) || changed
         }
         for (column in sudoku.columns) {
-            changed = findPairsOfCandidatesInList(column) || changed
+            changed = cleanCombinationsOfCandidatesInList(column) || changed
         }
         for (group in sudoku.groups) {
-            changed = findPairsOfCandidatesInList(group) || changed
+            changed = cleanCombinationsOfCandidatesInList(group) || changed
         }
         return changed
     }
 
-    private fun findPairsOfCandidatesInList(list: SudokuList?): Boolean {
+    private fun cleanCombinationsOfCandidatesInList(list: SudokuList?): Boolean {
         val sumOfCandidatesBefore = list!!.cells.sumBy { it.candidates.size }
-        val twoItemCellsInList = list.cells.filter { it.candidates.size == 2 }
+        for (combinationsSize in 2..8) {
+            val cellsWithCombinationSize = list.cells.filter { it.candidates.size == combinationsSize }
+            for (cell in cellsWithCombinationSize) {
+                val cellsWithEqualCandidates = cellsWithCombinationSize.filterNot { it == cell }
+                                                                       .filter { it.candidates.containsAll(cell.candidates) }
 
-        for (cell in twoItemCellsInList) {
-            val cellsWithEqualCandidates = twoItemCellsInList.filterNot { it == cell }
-                                                             .filter { it.candidates.containsAll(cell.candidates) }
+                if (cellsWithEqualCandidates.size > combinationsSize - 1) {
+                    throw Exception("This Sudoku is unsolvable!!! " +
+                            "${cellsWithEqualCandidates.size} > ${combinationsSize - 1} " +
+                            "in ${list.javaClass.name} [${cell.rowIndex},${cell.columnIndex}]")
+                }
 
-            if (cellsWithEqualCandidates.size > 1)
-                throw Exception("This Sudoku is unsolvable!!!")
+                if (cellsWithEqualCandidates.size == combinationsSize - 1) {
+                    list.cells.filterNot { it == cell || it in cellsWithEqualCandidates }
+                              .forEach { it.candidates.removeAll(cell.candidates) }
 
-            if (cellsWithEqualCandidates.size == 1) {
-                list.cells.filterNot { it == cell || it == cellsWithEqualCandidates[0] }
-                          .forEach { it.candidates.removeAll(cell.candidates) }
-
-                if (log) File("./$timestamp.log").appendText("Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex} and ${cellsWithEqualCandidates[0].rowIndex}-${cellsWithEqualCandidates[0].columnIndex}\n")
+                    if (log) File("./$timestamp.log").appendText(
+                            "Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex}"
+                    )
+                }
             }
         }
         val sumOfCandidatesAfter = list.cells.sumBy { it.candidates.size }
