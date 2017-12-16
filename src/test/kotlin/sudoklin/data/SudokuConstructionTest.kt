@@ -9,18 +9,19 @@ import kotlin.test.assertFalse
 
 class SudokuConstructionTest : Spek({
     describe("A Cell in row and column") {
-        val cell = SudokuCell(0, 0, IntArray(1, {5}))
-        val row = SudokuRow(0, Array(1, {cell}))
-        val column = SudokuColumn(0, Array(1, {cell}))
+        val cell = SudokuCell(0, 0, mutableSetOf(5))
+        val row = SudokuRow(Array(1, {cell}))
+        val column = SudokuColumn(Array(1, {cell}))
 
         it("should be the same after being updated") {
-            assertEquals(5, row.cells[0].candidates[0])
-            assertEquals(5, column.cells[0].candidates[0])
+            assertEquals(5, row.cells[0].candidates.first())
+            assertEquals(5, column.cells[0].candidates.first())
 
-            cell.candidates[0] = 4
+            cell.candidates.clear()
+            cell.candidates.add(4)
 
-            assertEquals(4, row.cells[0].candidates[0])
-            assertEquals(4, column.cells[0].candidates[0])
+            assertEquals(4, row.cells[0].candidates.first())
+            assertEquals(4, column.cells[0].candidates.first())
         }
     }
 })
@@ -58,8 +59,8 @@ class NewSudokuTest : Spek({
             }
         }
 
-        it("should have one less number in the row/column/group if it was added") {
-            sudoku.addSolvedNumber(0,0, 9)
+        it("should have one less number in the row/column/group if it was solved") {
+            sudoku.addSolvedNumber(0, 0, 9)
             for (i in 1..8) {
                 val rowCell = sudoku.rows[0]!!.cells[i]
                 val columnCell = sudoku.columns[0]!!.cells[i]
@@ -73,6 +74,9 @@ class NewSudokuTest : Spek({
                 assertFalse(columnCell.candidates.contains(9))
                 assertFalse(groupCell.candidates.contains(9))
             }
+            val cell = sudoku.getCell(0,0)
+            assertEquals(9, cell.candidates.first())
+            assertEquals("9", cell.toString())
         }
     }
 })

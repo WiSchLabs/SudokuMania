@@ -23,29 +23,16 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
     }
 
     fun fixedNumberIsInColumn(columnIndex: Int, number: Int): Boolean {
-        for (rowIndex in 0..8) {
-            if (fixedNumberIsInCell(rowIndex, columnIndex, number))
-                return true
-        }
-        return false
+        return (0..8).any { fixedNumberIsInCell(it, columnIndex, number) }
     }
 
     fun fixedNumberIsInRow(rowIndex: Int, number: Int): Boolean {
-        for (columnIndex in 0..8) {
-            if (fixedNumberIsInCell(rowIndex, columnIndex, number))
-                return true
-        }
-        return false
+        return (0..8).any { fixedNumberIsInCell(rowIndex, it, number) }
     }
 
     fun fixedNumberIsInGroup(groupIndex: Int, number: Int): Boolean {
         val group = getGroup(groupIndex)
-        for (cell in group) {
-            if (cell.size == 1 && cell[0] == number) {
-                return true
-            }
-        }
-        return false
+        return group.any { it.size == 1 && it[0] == number }
     }
 
 
@@ -96,6 +83,88 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
             s += "#"
             for (columnIndex in 0..8) {
                 s += " "
+                s += getCell(rowIndex, columnIndex).toString()
+                if (columnIndex == 2 || columnIndex == 5) {
+                    s += " |"
+                }
+            }
+            s += " #\r\n"
+
+            if (rowIndex == 2 || rowIndex == 5) {
+                s += "# - - - + - - - + - - - #\r\n"
+            }
+        }
+        s += "# # # # # # # # # # # # #\r\n"
+        return s
+    }
+}
+
+class NewShinySudoku(val rows: Array<SudokuRow?> = Array(9, {_ -> null}),
+                     val columns: Array<SudokuColumn?> = Array(9, {_ -> null}),
+                     val groups: Array<SudokuGroup?> = Array(9, {_ -> null})) {
+
+    fun clone(): NewShinySudoku {
+        return NewShinySudoku(rows, columns, groups)
+    }
+
+    init {
+        val cells: MutableList<SudokuCell> = ArrayList()
+        for (rowIndex in 0..8) {
+            for (columnIndex in 0..8) {
+                cells.add(SudokuCell(rowIndex, columnIndex))
+            }
+        }
+        for (index in 0..8) {
+            rows[index] = SudokuRow(cells.filter({ cell -> cell.rowIndex == index }).toTypedArray() )
+            columns[index] = SudokuColumn(cells.filter({ cell -> cell.columnIndex == index }).toTypedArray() )
+            groups[index] = SudokuGroup(cells.filter({ cell -> cell.groupIndex == index }).toTypedArray() )
+        }
+    }
+
+    fun addSolvedNumber(rowIndex: Int, columnIndex: Int, number: Int) {
+        val sudokuCell = rows[rowIndex]!!.cells[columnIndex]
+        val groupIndex = sudokuCell.groupIndex
+
+        sudokuCell.candidates.clear()
+        sudokuCell.candidates.add(number)
+
+        rows[rowIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        columns[columnIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        groups[groupIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+    }
+
+    fun getCell(rowIndex: Int, columnIndex: Int): SudokuCell {
+        return rows[rowIndex]!!.cells[columnIndex]
+    }
+
+    fun isSolved(): Boolean {
+        for (i in 0..8) {
+            for (j in 0..8) {
+                if (!getCell(i, j).isSolved())
+                    return false
+            }
+        }
+        return true
+    }
+
+    fun isValid(): Boolean {
+        for (i in 0..8) {
+            if (!rows[i]!!.isValid())
+                return false
+            if (!columns[i]!!.isValid())
+                return false
+            if (!groups[i]!!.isValid())
+                return false
+        }
+        return true
+    }
+
+    override fun toString(): String {
+        var s = "\r\n# # # # # # # # # # # # #\r\n"
+        for (rowIndex in 0..8) {
+            s += "#"
+            for (columnIndex in 0..8) {
+                s += " "
                 s += getCell(rowIndex, columnIndex)
                 if (columnIndex == 2 || columnIndex == 5) {
                     s += " |"
@@ -112,58 +181,50 @@ class SudokuPuzzle (val matrix: Array<Array<IntArray>>) {
     }
 }
 
-class NewShinySudoku() {
-    val rows: Array<SudokuRow?> = Array(9, {_ -> null})
-    val columns: Array<SudokuColumn?> = Array(9, {_ -> null})
-    val groups: Array<SudokuGroup?> = Array(9, {_ -> null})
-
-    init {
-        val cells: MutableList<SudokuCell> = ArrayList()
-        for (rowIndex in 0..8) {
-            for (columnIndex in 0..8) {
-                cells.add(SudokuCell(rowIndex, columnIndex))
-            }
-        }
-        for (index in 0..8) {
-            rows[index] = SudokuRow(index, cells.filter({ cell -> cell.rowIndex == index }).toTypedArray() )
-            columns[index] = SudokuColumn(index, cells.filter({ cell -> cell.columnIndex == index }).toTypedArray() )
-            groups[index] = SudokuGroup(index, cells.filter({ cell -> cell.groupIndex == index }).toTypedArray() )
-        }
-    }
-
-    fun addSolvedNumber(rowIndex: Int, columnIndex: Int, number: Int) {
-        rows[rowIndex]!!.cells[columnIndex].candidates = IntArray(1, { number })
-    }
-
-}
-
-open class SudokuList constructor(val index: Int, val cells: Array<SudokuCell>) {
+open class SudokuList constructor(val cells: Array<SudokuCell>) {
     fun containsSolvedNumber(number: Int): Boolean {
-        for (cell in cells) {
+        cells.forEach { cell ->
             if (cell.isSolvedWithNumber(number))
                 return true
         }
         return false
     }
 
-    fun isSolved() : Boolean {
-        for (cell in cells) {
-            if (!cell.isSolved())
-                return false
+    fun isSolved(): Boolean {
+        return cells.any { it.isSolved() }
+    }
+
+    fun isValid(): Boolean {
+        val aggregatedNumbers: MutableSet<Int> = mutableSetOf()
+        cells.forEach { cell ->
+            if (cell.isSolved()) {
+                if (aggregatedNumbers.contains(cell.candidates.first())) {
+                    return false
+                } else {
+                    aggregatedNumbers.add(cell.candidates.first())
+                }
+            }
         }
         return true
     }
+
+    fun purgeCandidateNumberFromUnsolvedCells(number: Int) {
+        cells
+                .filterNot { it.isSolved() }
+                .forEach { it.candidates.remove(number) }
+    }
 }
 
-class SudokuRow(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
-class SudokuColumn(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
-class SudokuGroup(index: Int, cells: Array<SudokuCell>) : SudokuList(index, cells) {}
+class SudokuRow(cells: Array<SudokuCell>) : SudokuList(cells)
+class SudokuColumn(cells: Array<SudokuCell>) : SudokuList(cells)
+class SudokuGroup(cells: Array<SudokuCell>) : SudokuList(cells)
 
-class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int, var candidates: IntArray = IntArray(9, { it * 1 })) {
+class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
+                             var candidates: MutableSet<Int> = mutableSetOf(1, 2, 3, 4, 5, 6, 7, 8, 9)) {
     val groupIndex: Int = getGroupIndexForCell(rowIndex, columnIndex)
 
     fun isSolvedWithNumber(number: Int): Boolean {
-        return isSolved() && candidates[0] == number
+        return isSolved() && candidates.contains(number)
     }
 
     fun isSolved(): Boolean {
@@ -174,5 +235,12 @@ class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int, var candid
         var groupIndex = columnIndex / 3
         groupIndex += (rowIndex / 3) * 3
         return groupIndex
+    }
+
+    override fun toString(): String {
+        return if (isSolved())
+            candidates.first().toString()
+        else
+            "."
     }
 }
