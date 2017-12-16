@@ -26,9 +26,9 @@ class SudokuConstructionTest : Spek({
     }
 })
 
-class NewSudokuTest : Spek({
+class SudokuTest : Spek({
     describe("A new sudoku") {
-        val sudoku = NewShinySudoku()
+        val sudoku = Sudoku()
 
         it("should contain all the row candidates") {
             for (row in sudoku.rows) {
