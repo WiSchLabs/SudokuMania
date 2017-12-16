@@ -332,16 +332,23 @@ class NewSudokuSolver(val sudoku: NewShinySudoku, private val log: Boolean = fal
     }
 
     private fun findPairsOfCandidatesInList(list: SudokuList?): Boolean {
-        var changed = false
-        val twoItemCellsInList = list!!.cells.filter { it.candidates.size == 2 }
+        val sumOfCandidatesBefore = list!!.cells.sumBy { it.candidates.size }
+        val twoItemCellsInList = list.cells.filter { it.candidates.size == 2 }
         for (cell in twoItemCellsInList) {
-            val cellsWithEqualCandidates = twoItemCellsInList.filterNot { it == cell }.filter { it.candidates.containsAll(cell.candidates) }
-            if (cellsWithEqualCandidates.size == 1) { // if there are more, the puzzle is not solvable
-                list.cells.filterNot { it == cell || it == cellsWithEqualCandidates[0] }.forEach { it.candidates.removeAll(cell.candidates) }
+            val cellsWithEqualCandidates = twoItemCellsInList.filterNot { it == cell }
+                                                             .filter { it.candidates.containsAll(cell.candidates) }
+
+            if (cellsWithEqualCandidates.size > 1)
+                throw Exception("This Sudoku is unsolvable!!!")
+
+            if (cellsWithEqualCandidates.size == 1) {
+                list.cells.filterNot { it == cell || it == cellsWithEqualCandidates[0] }
+                          .forEach { it.candidates.removeAll(cell.candidates) }
+
                 if (log) File("./$timestamp.log").appendText("Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex} and ${cellsWithEqualCandidates[0].rowIndex}-${cellsWithEqualCandidates[0].columnIndex}\n")
-                changed = true
             }
         }
-        return changed
+        val sumOfCandidatesAfter = list.cells.sumBy { it.candidates.size }
+        return sumOfCandidatesBefore != sumOfCandidatesAfter
     }
 }
