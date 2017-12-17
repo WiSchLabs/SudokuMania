@@ -1,6 +1,7 @@
 package sudoklin.solver
 
 import sudoklin.data.Sudoku
+import sudoklin.data.SudokuGroup
 import sudoklin.data.SudokuList
 import java.io.File
 
@@ -174,5 +175,35 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
         }
         val sumOfCandidatesAfter = list.cells.sumBy { it.candidates.size }
         return sumOfCandidatesBefore != sumOfCandidatesAfter
+    }
+
+    fun cleanCandidateConstraintsInOtherGroups() {
+        for (number in 1..9) {
+            for (group in sudoku.groups) {
+                group!!
+                val rowIndexesOfGroupCellsContainingGivenNumber = getRowIndexesOfGroupCellsContainingGivenNumber(group, number)
+                if (rowIndexesOfGroupCellsContainingGivenNumber.size == 1) {
+                    val row = sudoku.rows[rowIndexesOfGroupCellsContainingGivenNumber.first()]
+                    row!!.cells.filterNot { cell -> cell in group.cells }
+                               .forEach { cell -> sudoku.removeCandidateFromCell(cell.rowIndex, cell.columnIndex, number) }
+                }
+                val columnIndexesOfGroupCellsContainingGivenNumber = getColumnIndexesOfGroupCellsContainingGivenNumber(group, number)
+                if (columnIndexesOfGroupCellsContainingGivenNumber.size == 1) {
+                    val column = sudoku.columns[columnIndexesOfGroupCellsContainingGivenNumber.first()]
+                    column!!.cells.filterNot { cell -> cell in group.cells }
+                                  .forEach { cell -> sudoku.removeCandidateFromCell(cell.rowIndex, cell.columnIndex, number) }
+                }
+            }
+        }
+    }
+
+    private fun getRowIndexesOfGroupCellsContainingGivenNumber(group: SudokuGroup, number: Int): Set<Int> {
+        val groupCellsContainingGivenNumber = group.cells.filter { cell -> cell.candidates.contains(number) }
+        return groupCellsContainingGivenNumber.groupBy { cell -> cell.rowIndex }.keys
+    }
+
+    private fun getColumnIndexesOfGroupCellsContainingGivenNumber(group: SudokuGroup, number: Int): Set<Int> {
+        val groupCellsContainingGivenNumber = group.cells.filter { cell -> cell.candidates.contains(number) }
+        return groupCellsContainingGivenNumber.groupBy { cell -> cell.columnIndex }.keys
     }
 }
