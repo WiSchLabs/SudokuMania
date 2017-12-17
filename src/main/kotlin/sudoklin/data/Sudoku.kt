@@ -39,9 +39,9 @@ class Sudoku(val rows: Array<SudokuRow?> = Array(9, { _ -> null}),
     }
 
     fun isSolved(): Boolean {
-        for (i in 0..8) {
-            for (j in 0..8) {
-                if (!getCell(i, j).isSolved())
+        for (rowIndex in 0..8) {
+            for (columnIndex in 0..8) {
+                if (!getCell(rowIndex, columnIndex).isSolved())
                     return false
             }
         }
@@ -49,12 +49,12 @@ class Sudoku(val rows: Array<SudokuRow?> = Array(9, { _ -> null}),
     }
 
     fun isValid(): Boolean {
-        for (i in 0..8) {
-            if (!rows[i]!!.isValid())
+        for (index in 0..8) {
+            if (!rows[index]!!.isValid())
                 return false
-            if (!columns[i]!!.isValid())
+            if (!columns[index]!!.isValid())
                 return false
-            if (!groups[i]!!.isValid())
+            if (!groups[index]!!.isValid())
                 return false
         }
         return true
@@ -92,7 +92,7 @@ open class SudokuList constructor(val cells: Array<SudokuCell>) {
     }
 
     fun isSolved(): Boolean {
-        return cells.any { it.isSolved() }
+        return cells.all { cell -> cell.isSolved() }
     }
 
     fun isValid(): Boolean {
@@ -110,9 +110,8 @@ open class SudokuList constructor(val cells: Array<SudokuCell>) {
     }
 
     fun purgeCandidateNumberFromUnsolvedCells(number: Int) {
-        cells
-                .filterNot { it.isSolved() }
-                .forEach { it.candidates.remove(number) }
+        cells.filterNot { cell -> cell.isSolved() }
+             .forEach { cell -> cell.candidates.remove(number) }
     }
 }
 
