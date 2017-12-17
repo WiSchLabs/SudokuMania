@@ -164,8 +164,11 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
                 }
 
                 if (cellsWithEqualCandidates.size == combinationsSize - 1) {
-                    list.cells.filterNot { it == cell || it in cellsWithEqualCandidates }
-                              .forEach { it.candidates.removeAll(cell.candidates) }
+                    for (number in cell.candidates) {
+                        for (cellToAdjust in list.cells.filterNot { it == cell || it in cellsWithEqualCandidates }) {
+                            sudoku.removeCandidateFromCell(cellToAdjust.rowIndex, cellToAdjust.columnIndex, number)
+                        }
+                    }
 
                     if (log) File("./$timestamp.log").appendText(
                             "Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex}"
