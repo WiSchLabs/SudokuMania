@@ -13,7 +13,7 @@ class SudokuSolverCombinationsFindingTest : Spek({
 
         describe("should eliminate all occurrences of found ") {
             it("pairs in row") {
-                val sudoku = fileImporter.import("src/test/resources/tuple_candidate_elimination_for_row.sdk")
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_for_tuple_in_row.sdk")
                 val solver = SudokuSolver(sudoku)
                 solver.cleanCombinationsOfCandidates()
 
@@ -24,7 +24,7 @@ class SudokuSolverCombinationsFindingTest : Spek({
             }
 
             it("pairs in column") {
-                val sudoku = fileImporter.import("src/test/resources/tuple_candidate_elimination_for_column.sdk")
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_for_tuple_in_column.sdk")
                 val solver = SudokuSolver(sudoku)
                 solver.cleanCombinationsOfCandidates()
 
@@ -35,7 +35,7 @@ class SudokuSolverCombinationsFindingTest : Spek({
             }
 
             it("triples in row") {
-                val sudoku = fileImporter.import("src/test/resources/triple_candidate_elimination_for_row.sdk")
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_for_triple_in_row.sdk")
                 val solver = SudokuSolver(sudoku)
                 solver.cleanCombinationsOfCandidates()
 
@@ -47,7 +47,7 @@ class SudokuSolverCombinationsFindingTest : Spek({
             }
 
             it("triples in column") {
-                val sudoku = fileImporter.import("src/test/resources/triple_candidate_elimination_for_column.sdk")
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_for_triple_in_column.sdk")
                 val solver = SudokuSolver(sudoku)
                 solver.cleanCombinationsOfCandidates()
 
@@ -59,7 +59,7 @@ class SudokuSolverCombinationsFindingTest : Spek({
             }
 
             it("pairs in group") {
-                val sudoku = fileImporter.import("src/test/resources/tuple_candidate_elimination_for_row.sdk")
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_for_tuple_in_row.sdk")
                 val solver = SudokuSolver(sudoku)
                 solver.cleanCombinationsOfCandidates()
 
@@ -74,7 +74,7 @@ class SudokuSolverCombinationsFindingTest : Spek({
             }
 
             it("triples in group") {
-                val sudoku = fileImporter.import("src/test/resources/triple_candidate_elimination_for_row.sdk")
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_for_triple_in_group.sdk")
                 val solver = SudokuSolver(sudoku)
                 solver.cleanCombinationsOfCandidates()
                 assertFalse(sudoku.getCell(2, 1).candidates.contains(1))
