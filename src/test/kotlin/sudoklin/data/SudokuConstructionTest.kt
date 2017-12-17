@@ -4,6 +4,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.test.assertFalse
 
@@ -60,7 +61,8 @@ class SudokuTest : Spek({
         }
 
         it("should have one less number in the row/column/group if it was solved") {
-            sudoku.addSolvedNumber(0, 0, 9)
+            val cell = sudoku.getCell(0,0)
+            sudoku.addSolvedNumber(cell, 9)
             for (i in 1..8) {
                 val rowCell = sudoku.rows[0]!!.cells[i]
                 val columnCell = sudoku.columns[0]!!.cells[i]
@@ -74,9 +76,22 @@ class SudokuTest : Spek({
                 assertFalse(columnCell.candidates.contains(9))
                 assertFalse(groupCell.candidates.contains(9))
             }
-            val cell = sudoku.getCell(0,0)
             assertEquals(9, cell.candidates.first())
             assertEquals("9", cell.toString())
+        }
+
+        it("should not be possible to remove the number from a solved cell") {
+            val cell = sudoku.getCell(8,8)
+            sudoku.addSolvedNumber(cell, 4)
+            assertFailsWith<Exception> {
+                sudoku.removeCandidateFromCell(cell, 4)
+            }
+        }
+
+        it("should be possible to remove a different number from a solved cell") {
+            val cell = sudoku.getCell(8,8)
+            sudoku.addSolvedNumber(cell, 3)
+            sudoku.removeCandidateFromCell(cell, 4)
         }
     }
 })

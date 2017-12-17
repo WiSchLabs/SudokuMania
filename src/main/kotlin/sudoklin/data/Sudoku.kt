@@ -22,16 +22,22 @@ class Sudoku(val rows: Array<SudokuRow?> = Array(9, { _ -> null}),
         }
     }
 
-    fun addSolvedNumber(rowIndex: Int, columnIndex: Int, number: Int) {
-        val sudokuCell = rows[rowIndex]!!.cells[columnIndex]
-        val groupIndex = sudokuCell.groupIndex
+    fun addSolvedNumber(cell: SudokuCell, number: Int) {
+        val groupIndex = cell.groupIndex
 
-        sudokuCell.candidates.clear()
-        sudokuCell.candidates.add(number)
+        cell.solveWithNumber(number)
 
-        rows[rowIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
-        columns[columnIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        rows[cell.rowIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        columns[cell.columnIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
         groups[groupIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+    }
+
+    fun removeCandidateFromCell(cell: SudokuCell, number: Int) {
+        cell.removeCandidate(number)
+
+        if (cell.candidates.size == 1) {
+            addSolvedNumber(cell, cell.candidates.first())
+        }
     }
 
     fun getCell(rowIndex: Int, columnIndex: Int): SudokuCell {
@@ -78,6 +84,25 @@ class Sudoku(val rows: Array<SudokuRow?> = Array(9, { _ -> null}),
             }
         }
         s += "# # # # # # # # # # # # #\r\n"
+        return s
+    }
+
+    fun debugPrint(): String {
+        var s = "#################################################\n"
+        for (rowIndex in 0..8) {
+            s += "# "
+            for (columnIndex in 0..8) {
+                s += getCell(rowIndex, columnIndex).candidates
+                if (columnIndex in listOf(2, 5)) {
+                    s += " | "
+                }
+            }
+            s += "\n"
+            if (rowIndex in listOf(2, 5)) {
+                s += "#################################################\n"
+            }
+        }
+        s += "#################################################"
         return s
     }
 }
@@ -142,5 +167,17 @@ class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
             candidates.first().toString()
         else
             "."
+    }
+
+    internal fun removeCandidate(number: Int) {
+        if (isSolvedWithNumber(number)) {
+            throw Exception("Illegal modification: Can't remove value from solved Cell.")
+        }
+        candidates.remove(number)
+    }
+
+    internal fun solveWithNumber(number: Int) {
+        candidates.clear()
+        candidates.add(number)
     }
 }
