@@ -60,7 +60,8 @@ class SudokuTest : Spek({
         }
 
         it("should have one less number in the row/column/group if it was solved") {
-            sudoku.addSolvedNumber(0, 0, 9)
+            val cell = sudoku.getCell(0,0)
+            sudoku.addSolvedNumber(cell, 9)
             for (i in 1..8) {
                 val rowCell = sudoku.rows[0]!!.cells[i]
                 val columnCell = sudoku.columns[0]!!.cells[i]
@@ -74,7 +75,6 @@ class SudokuTest : Spek({
                 assertFalse(columnCell.candidates.contains(9))
                 assertFalse(groupCell.candidates.contains(9))
             }
-            val cell = sudoku.getCell(0,0)
             assertEquals(9, cell.candidates.first())
             assertEquals("9", cell.toString())
         }

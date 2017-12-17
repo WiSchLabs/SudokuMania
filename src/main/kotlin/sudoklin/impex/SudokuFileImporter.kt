@@ -18,7 +18,8 @@ class SudokuFileImporter {
                 for (literal in input) {
                     if (literal != ".") {
                         val number = Integer.parseInt(literal)
-                        sudoku.addSolvedNumber(rowCounter, columnCounter, number)
+                        val cell = sudoku.getCell(rowCounter, columnCounter)
+                        sudoku.addSolvedNumber(cell, number)
                     }
                     columnCounter++
                 }

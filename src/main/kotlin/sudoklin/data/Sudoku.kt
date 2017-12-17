@@ -22,24 +22,21 @@ class Sudoku(val rows: Array<SudokuRow?> = Array(9, { _ -> null}),
         }
     }
 
-    fun addSolvedNumber(rowIndex: Int, columnIndex: Int, number: Int) {
-        val cell = rows[rowIndex]!!.cells[columnIndex]
+    fun addSolvedNumber(cell: SudokuCell, number: Int) {
         val groupIndex = cell.groupIndex
 
         cell.solveWithNumber(number)
 
-        rows[rowIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
-        columns[columnIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        rows[cell.rowIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
+        columns[cell.columnIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
         groups[groupIndex]!!.purgeCandidateNumberFromUnsolvedCells(number)
     }
 
-    fun removeCandidateFromCell(rowIndex: Int, columnIndex: Int, number: Int) {
-        val cell = rows[rowIndex]!!.cells[columnIndex]
-
+    fun removeCandidateFromCell(cell: SudokuCell, number: Int) {
         cell.removeCandidate(number)
 
         if (cell.candidates.size == 1) {
-            addSolvedNumber(rowIndex, columnIndex, cell.candidates.first())
+            addSolvedNumber(cell, cell.candidates.first())
         }
     }
 

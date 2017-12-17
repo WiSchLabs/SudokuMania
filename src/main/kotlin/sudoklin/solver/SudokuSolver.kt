@@ -105,16 +105,19 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
             for (index in 0..8) {
                 val possiblePositionsInRow = getPossiblePositionsForNumberInRow(number, index)
                 if (possiblePositionsInRow.size == 1 && !sudoku.getCell(index, possiblePositionsInRow[0]).isSolved()) {
+                    val cell = sudoku.getCell(index, possiblePositionsInRow[0])
 
-                    sudoku.addSolvedNumber(index, possiblePositionsInRow[0], number)
+                    sudoku.addSolvedNumber(cell, number)
+
                     changed = true
                 }
                 if (log) File("./$timestamp.log").appendText(" I: $number in row" + sudoku.toString())
 
                 val possiblePositionsInColumn = getPossiblePositionsForNumberInColumn(number, index)
                 if (possiblePositionsInColumn.size == 1 && !sudoku.getCell(possiblePositionsInColumn[0], index).isSolved()) {
+                    val cell = sudoku.getCell(possiblePositionsInColumn[0], index)
 
-                    sudoku.addSolvedNumber(possiblePositionsInColumn[0], index, number)
+                    sudoku.addSolvedNumber(cell, number)
 
                     changed = true
                 }
@@ -122,10 +125,9 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
 
                 val possiblePositionsInGroup = getPossiblePositionsForNumberInGroup(number, index)
                 if (possiblePositionsInGroup.size == 1 && !sudoku.getCell(possiblePositionsInGroup[0].first, possiblePositionsInGroup[0].second).isSolved()) {
-                    val c = sudoku.getCell(possiblePositionsInGroup[0].first,
-                            possiblePositionsInGroup[0].second)
+                    val cell = sudoku.getCell(possiblePositionsInGroup[0].first, possiblePositionsInGroup[0].second)
 
-                    sudoku.addSolvedNumber(c.rowIndex, c.columnIndex, number)
+                    sudoku.addSolvedNumber(cell, number)
 
                     changed = true
                 }
@@ -166,7 +168,7 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
                 if (cellsWithEqualCandidates.size == combinationsSize - 1) {
                     for (number in cell.candidates) {
                         for (cellToAdjust in list.cells.filterNot { it == cell || it in cellsWithEqualCandidates }) {
-                            sudoku.removeCandidateFromCell(cellToAdjust.rowIndex, cellToAdjust.columnIndex, number)
+                            sudoku.removeCandidateFromCell(cellToAdjust, number)
                         }
                     }
 
@@ -188,13 +190,13 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
                 if (rowIndexesOfGroupCellsContainingGivenNumber.size == 1) {
                     val row = sudoku.rows[rowIndexesOfGroupCellsContainingGivenNumber.first()]
                     row!!.cells.filterNot { cell -> cell in group.cells }
-                               .forEach { cell -> sudoku.removeCandidateFromCell(cell.rowIndex, cell.columnIndex, number) }
+                               .forEach { cell -> sudoku.removeCandidateFromCell(cell, number) }
                 }
                 val columnIndexesOfGroupCellsContainingGivenNumber = getColumnIndexesOfGroupCellsContainingGivenNumber(group, number)
                 if (columnIndexesOfGroupCellsContainingGivenNumber.size == 1) {
                     val column = sudoku.columns[columnIndexesOfGroupCellsContainingGivenNumber.first()]
                     column!!.cells.filterNot { cell -> cell in group.cells }
-                                  .forEach { cell -> sudoku.removeCandidateFromCell(cell.rowIndex, cell.columnIndex, number) }
+                                  .forEach { cell -> sudoku.removeCandidateFromCell(cell, number) }
                 }
             }
         }
