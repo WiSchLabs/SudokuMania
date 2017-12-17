@@ -155,25 +155,26 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
         val sumOfCandidatesBefore = list!!.cells.sumBy { it.candidates.size }
         for (combinationsSize in 2..8) {
             val cellsWithCombinationSize = list.cells.filter { it.candidates.size == combinationsSize }
-            for (cell in cellsWithCombinationSize) {
-                val cellsWithEqualCandidates = cellsWithCombinationSize.filterNot { it == cell }
-                                                                       .filter { it.candidates.containsAll(cell.candidates) }
+            for (cellWithCombination in cellsWithCombinationSize) {
+                val cellsWithEqualCandidates = cellsWithCombinationSize.filterNot { it == cellWithCombination }
+                                                                       .filter { it.candidates.containsAll(cellWithCombination.candidates) }
 
                 if (cellsWithEqualCandidates.size > combinationsSize - 1) {
                     throw Exception("This Sudoku is unsolvable!!! " +
                             "${cellsWithEqualCandidates.size} > ${combinationsSize - 1} " +
-                            "in ${list.javaClass.name} [${cell.rowIndex},${cell.columnIndex}]")
+                            "in ${list.javaClass.name} [${cellWithCombination.rowIndex},${cellWithCombination.columnIndex}]")
                 }
 
                 if (cellsWithEqualCandidates.size == combinationsSize - 1) {
-                    for (number in cell.candidates) {
-                        for (cellToAdjust in list.cells.filterNot { it == cell || it in cellsWithEqualCandidates }) {
+                    for (number in cellWithCombination.candidates) {
+                        val cellsToAdjust = list.cells.filterNot { cellInList -> cellInList == cellWithCombination || cellInList in cellsWithEqualCandidates }
+                        for (cellToAdjust in cellsToAdjust) {
                             sudoku.removeCandidateFromCell(cellToAdjust, number)
                         }
                     }
 
                     if (log) File("./$timestamp.log").appendText(
-                            "Found Pair ${cell.candidates} in ${cell.rowIndex}-${cell.columnIndex}"
+                            "Found Pair ${cellWithCombination.candidates} in ${cellWithCombination.rowIndex}-${cellWithCombination.columnIndex}"
                     )
                 }
             }
