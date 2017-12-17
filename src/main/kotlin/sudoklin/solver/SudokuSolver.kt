@@ -92,6 +92,7 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
             if (log) File("./$timestamp.log").appendText("Step $iteration b:" + sudoku.toString())
             /*3*/ changed = changed || cleanCombinationsOfCandidates()
             if (log) File("./$timestamp.log").appendText("Step $iteration c:" + sudoku.toString())
+            /*4*/ changed = changed || cleanCandidateConstraintsInOtherGroups()
             iteration++
             if (!changed)
                 return sudoku
@@ -183,7 +184,9 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
         return sumOfCandidatesBefore != sumOfCandidatesAfter
     }
 
-    fun cleanCandidateConstraintsInOtherGroups() {
+    fun cleanCandidateConstraintsInOtherGroups(): Boolean {
+        var sumOfCandidatesBefore = 0
+        sudoku.rows.forEach { row -> sumOfCandidatesBefore += row!!.cells.sumBy { it.candidates.size } }
         for (number in 1..9) {
             for (group in sudoku.groups) {
                 group!!
@@ -201,6 +204,9 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
                 }
             }
         }
+        var sumOfCandidatesAfter = 0
+        sudoku.rows.forEach { row -> sumOfCandidatesAfter += row!!.cells.sumBy { it.candidates.size } }
+        return sumOfCandidatesBefore != sumOfCandidatesAfter
     }
 
     private fun getRowIndexesOfGroupCellsContainingGivenNumber(group: SudokuGroup, number: Int): Set<Int> {
