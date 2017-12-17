@@ -86,6 +86,25 @@ class Sudoku(val rows: Array<SudokuRow?> = Array(9, { _ -> null}),
         s += "# # # # # # # # # # # # #\r\n"
         return s
     }
+
+    fun debugPrint(): String {
+        var s = "#################################################\n"
+        for (rowIndex in 0..8) {
+            s += "# "
+            for (columnIndex in 0..8) {
+                s += getCell(rowIndex, columnIndex).candidates
+                if (columnIndex in listOf(2, 5)) {
+                    s += " | "
+                }
+            }
+            s += "\n"
+            if (rowIndex in listOf(2, 5)) {
+                s += "#################################################\n"
+            }
+        }
+        s += "#################################################"
+        return s
+    }
 }
 
 open class SudokuList constructor(val cells: Array<SudokuCell>) {
@@ -150,7 +169,7 @@ class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
             "."
     }
 
-    fun removeCandidate(number: Int) {
+    internal fun removeCandidate(number: Int) {
         candidates.remove(number)
     }
 
