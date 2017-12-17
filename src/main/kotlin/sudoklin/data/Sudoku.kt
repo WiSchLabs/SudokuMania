@@ -170,10 +170,13 @@ class SudokuCell constructor(val rowIndex: Int, val columnIndex: Int,
     }
 
     internal fun removeCandidate(number: Int) {
+        if (isSolvedWithNumber(number)) {
+            throw Exception("Illegal modification: Can't remove value from solved Cell.")
+        }
         candidates.remove(number)
     }
 
-    fun solveWithNumber(number: Int) {
+    internal fun solveWithNumber(number: Int) {
         candidates.clear()
         candidates.add(number)
     }
