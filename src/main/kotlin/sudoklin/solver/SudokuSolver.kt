@@ -234,25 +234,22 @@ class SudokuSolver(val sudoku: Sudoku, private val log: Boolean = false) {
         var sumOfCandidatesBefore = 0
         sudoku.rows.forEach { row -> sumOfCandidatesBefore += row!!.cells.sumBy { it.candidates.size } }
         for (number in 1..9) {
-            for (row in sudoku.rows) {
-                val groupIndexofRowCellsContainingGivenNumber = getGroupIndexOfListCellsContainingGivenNumber(row!!, number)
-                if (groupIndexofRowCellsContainingGivenNumber.size == 1) {
-                    val group = sudoku.groups[groupIndexofRowCellsContainingGivenNumber.first()]
-                    group!!.cells.filterNot { cell -> cell in row.cells }
-                            .forEach { cell -> sudoku.removeCandidateFromCell(cell, number) }
-                }
-            }
-            for (column in sudoku.columns) {
-                val groupIndexofColumnCellsContainingGivenNumber = getGroupIndexOfListCellsContainingGivenNumber(column!!, number)
-                if (groupIndexofColumnCellsContainingGivenNumber.size == 1) {
-                    val group = sudoku.groups[groupIndexofColumnCellsContainingGivenNumber.first()]
-                    group!!.cells.filterNot { cell -> cell in column.cells }
-                            .forEach { cell -> sudoku.removeCandidateFromCell(cell, number) }
-                }
-            }
+            for (row in sudoku.rows)
+                cleanCandidateConstraintsInsideGroupForGivenList(row!!, number)
+            for (column in sudoku.columns)
+                cleanCandidateConstraintsInsideGroupForGivenList(column!!, number)
         }
         var sumOfCandidatesAfter = 0
         sudoku.rows.forEach { row -> sumOfCandidatesAfter += row!!.cells.sumBy { it.candidates.size } }
         return sumOfCandidatesBefore != sumOfCandidatesAfter
+    }
+
+    private fun cleanCandidateConstraintsInsideGroupForGivenList(list: SudokuList, number: Int) {
+        val groupIndexofColumnCellsContainingGivenNumber = getGroupIndexOfListCellsContainingGivenNumber(list, number)
+        if (groupIndexofColumnCellsContainingGivenNumber.size == 1) {
+            val group = sudoku.groups[groupIndexofColumnCellsContainingGivenNumber.first()]
+            group!!.cells.filterNot { cell -> cell in list.cells }
+                         .forEach { cell -> sudoku.removeCandidateFromCell(cell, number) }
+        }
     }
 }
