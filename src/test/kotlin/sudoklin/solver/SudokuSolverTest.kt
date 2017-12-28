@@ -135,15 +135,15 @@ class SudokuSolverTest : Spek({
                     assertTrue(solvedSudoku.isValid())
                 }
 
-//                it("should be able to solve an extreme hard puzzle") {
-//                    val sudoku = fileImporter.import("src/test/resources/extreme_hard_sudoku.sdk")
-//
-//                    val solver = SudokuSolver(sudoku)
-//                    val solvedSudoku = solver.solve()
-//
-//                    assertTrue(solvedSudoku.isSolved())
-//                    assertTrue(solvedSudoku.isValid())
-//                }
+                it("should be able to solve an extreme hard puzzle") {
+                    val sudoku = fileImporter.import("src/test/resources/extreme_hard_sudoku.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku = solver.solve()
+
+                    assertTrue(solvedSudoku.isSolved())
+                    assertTrue(solvedSudoku.isValid())
+                }
             }
         }
     }

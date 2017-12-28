@@ -107,6 +107,28 @@ class SudokuSolverCombinationsFindingTest : Spek({
                     assertFalse(sudoku.getCell(rowIndex, 8).candidates.contains(1))
                 }
             }
+            it("in group by row") {
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_if_row_candidates_limitied_to_single_group.sdk")
+                val solver = SudokuSolver(sudoku)
+                solver.cleanCandidateConstraintsInsideGroup()
+                assertFalse(sudoku.getCell(1, 0).candidates.contains(1))
+                assertFalse(sudoku.getCell(1, 1).candidates.contains(1))
+                assertFalse(sudoku.getCell(1, 2).candidates.contains(1))
+                assertFalse(sudoku.getCell(2, 0).candidates.contains(1))
+                assertFalse(sudoku.getCell(2, 1).candidates.contains(1))
+                assertFalse(sudoku.getCell(2, 2).candidates.contains(1))
+            }
+            it("in group by column") {
+                val sudoku = fileImporter.import("src/test/resources/candidate_elimination_if_column_candidates_limited_to_single_group.sdk")
+                val solver = SudokuSolver(sudoku)
+                solver.cleanCandidateConstraintsInsideGroup()
+                assertFalse(sudoku.getCell(0, 1).candidates.contains(1))
+                assertFalse(sudoku.getCell(0, 2).candidates.contains(1))
+                assertFalse(sudoku.getCell(1, 1).candidates.contains(1))
+                assertFalse(sudoku.getCell(1, 2).candidates.contains(1))
+                assertFalse(sudoku.getCell(2, 1).candidates.contains(1))
+                assertFalse(sudoku.getCell(2, 2).candidates.contains(1))
+            }
         }
 
     }
