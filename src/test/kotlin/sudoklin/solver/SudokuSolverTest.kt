@@ -104,6 +104,18 @@ class SudokuSolverTest : Spek({
                     assertTrue(solvedSudoku.isSolved())
                     assertTrue(solvedSudoku.isValid())
                 }
+                
+                it("should be able to solve the puzzle if four numbers missing") {
+                    val sudoku = fileImporter.import("src/test/resources/four_missing_numbers.sdk")
+
+                    val solver = SudokuSolver(sudoku)
+                    val solvedSudoku = solver.solve()
+
+                    assertEquals(2, solvedSudoku.getCell(0, 0).candidates.first())
+                    assertEquals(1, solvedSudoku.getCell(0, 0).candidates.size)
+                    assertTrue(solvedSudoku.isSolved())
+                    assertTrue(solvedSudoku.isValid())
+                }
 
                 it("should be able to solve an easy puzzle") {
                     val sudoku = fileImporter.import("src/test/resources/easy_sudoku.sdk")
